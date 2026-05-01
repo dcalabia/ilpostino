@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Postino — Service Prep</title>
+<style>
+:root {
+  --bg: #ede5d8;
+  --card-bg: #f5ecd7;
+  --ink: #2a1f14;
+  --ink-soft: #6b5d46;
+  --acc: #7a5c20;
+  --acc-light: #b59254;
+  --line: #d4c4a0;
+  --wine-bg: #1a0f14;
+  --wine-card: #2a1820;
+  --wine-acc: #7a2a3c;
+  --wine-acc-s: #c47a8a;
+  --wine-line: #3a2830;
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+
+.screen { display: none; min-height: 100vh; padding-bottom: 80px; }
+
+#home {
+  background: var(--bg);
+  padding: 52px 24px 90px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.home-restaurant {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.home-title {
+  font-family: var(--serif);
+  font-size: 54px;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.home-title em { font-style: italic; }
+.home-div { width: 36px; height: 2px; background: var(--acc); margin: 18px auto; }
+.home-sub { text-align: center; font-size: 14px; color: var(--ink-soft); margin-bottom: 40px; }
+.section-label {
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--ink-soft); text-transform: uppercase;
+  margin-bottom: 14px; padding: 0 2px;
+}
+.card-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.h-card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 18px 18px 18px 14px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  border-left: 4px solid var(--acc);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.h-card:active { transform: scale(0.98); box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+.h-card.wine-card { border-left-color: var(--wine-acc); }
+.h-card.food-q { border-left-color: #4a6e2a; }
+.h-card.wine-q { border-left-color: #2a4a7a; }
+.h-icon { font-size: 26px; width: 38px; text-align: center; flex-shrink: 0; }
+.h-body { flex: 1; min-width: 0; }
+.h-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.h-name { font-weight: 600; font-size: 16px; }
+.h-count { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.06em; text-transform: uppercase; }
+.h-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.45; margin-bottom: 9px; }
+.h-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.h-tag {
+  font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase;
+  border: 1px solid var(--line); border-radius: 20px;
+  padding: 2px 9px; color: var(--ink-soft);
+}
+.h-arrow { color: var(--line); font-size: 20px; flex-shrink: 0; }
+
+.deck-wrap { max-width: 600px; margin: 0 auto; padding: 24px 20px 100px; }
+.deck-screen { background: var(--bg); }
+.deck-screen.wine-theme { background: #160d12; }
+
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; color: var(--ink-soft);
+  padding: 0 0 20px; display: flex; align-items: center; gap: 6px;
+  letter-spacing: 0.04em;
+}
+.wine-theme .back-btn { color: #8a7060; }
+
+.deck-eyebrow {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 6px;
+}
+.wine-theme .deck-eyebrow { color: #8a7060; }
+.deck-title { font-family: var(--serif); font-size: 34px; font-weight: 400; }
+.wine-theme .deck-title { color: #f0e0d0; }
+.deck-divider { width: 32px; height: 2px; background: var(--acc); margin-top: 12px; margin-bottom: 20px; }
+.wine-theme .deck-divider { background: var(--wine-acc-s); }
+
+.cat-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.cat-btn {
+  background: none; border: 1.5px solid var(--line);
+  border-radius: 24px; padding: 6px 16px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+  color: var(--ink-soft); cursor: pointer; transition: all 0.15s;
+}
+.cat-btn.active { background: var(--ink); border-color: var(--ink); color: #f5ecd7; }
+.wine-theme .cat-btn { border-color: var(--wine-line); color: #8a7060; }
+.wine-theme .cat-btn.active { background: var(--wine-acc); border-color: var(--wine-acc); color: #f5ecd7; }
+
+.progress { font-size: 13px; color: var(--ink-soft); text-align: center; margin-bottom: 16px; }
+.wine-theme .progress { color: #8a7060; }
+
+.card-wrap { perspective: 1600px; cursor: pointer; margin-bottom: 20px; }
+.card-inner {
+  position: relative; transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  border-radius: 16px; min-height: 300px;
+  height: auto;
+}
+.card-inner.flipped { transform: rotateY(180deg); }
+.card-face {
+  border-radius: 16px; padding: 28px 26px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  min-height: 300px;
+}
+.card-front {
+  background: var(--card-bg);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+  display: flex; flex-direction: column;
+}
+.wine-theme .card-front {
+  background: var(--wine-card);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  color: #f0e0d0;
+}
+.card-back {
+  background: white;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  transform: rotateY(180deg);
+  position: absolute; top: 0; left: 0; right: 0;
+}
+.wine-theme .card-back { background: #1a0f14; color: #f0e0d0; }
+
+.front-cat {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 12px;
+}
+.wine-theme .card-front .front-cat { color: var(--wine-acc-s); }
+.front-name { font-family: var(--serif); font-size: 34px; font-weight: 400; line-height: 1.1; margin-bottom: 8px; }
+.front-price { font-size: 22px; color: var(--acc); font-weight: 600; margin-bottom: auto; }
+.front-pronunciation { font-size: 14px; color: var(--wine-acc-s); margin-bottom: 12px; font-style: italic; }
+.tap-hint { font-size: 12px; color: var(--line); text-align: center; margin-top: 28px; letter-spacing: 0.08em; }
+
+.section-tag {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--acc); margin-bottom: 10px;
+}
+.wine-theme .card-back .section-tag { color: var(--wine-acc-s); }
+.back-name { font-family: var(--serif); font-size: 26px; margin-bottom: 18px; }
+
+.pitch-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.pitch-item { display: flex; align-items: baseline; gap: 10px; }
+.pitch-num { font-size: 10px; color: var(--acc-light); letter-spacing: 0.1em; flex-shrink: 0; width: 18px; }
+.pitch-word { font-size: 17px; font-weight: 600; }
+
+.back-divider { height: 1px; background: var(--line); margin: 16px 0; }
+.wine-theme .card-back .back-divider { background: var(--wine-line); }
+
+.info-block { margin-bottom: 14px; }
+.info-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 4px; }
+.wine-theme .card-back .info-label { color: #8a7060; }
+.info-text { font-size: 14px; line-height: 1.5; }
+.info-text.italic { font-style: italic; }
+.mise-line { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+.note-line { font-size: 12px; color: var(--ink-soft); font-style: italic; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+.wine-theme .card-back .note-line { border-top-color: var(--wine-line); color: #8a7060; }
+
+.wine-flavors { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.flavor-item {
+  background: var(--bg); border-radius: 20px;
+  padding: 5px 14px; font-size: 13px; color: var(--ink-soft);
+}
+.wine-theme .card-back .flavor-item { background: #2a1820; color: #c4a080; }
+
+.dial-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.dial-lbl { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); width: 72px; flex-shrink: 0; }
+.wine-theme .card-back .dial-lbl { color: #8a7060; }
+.dial-dots { display: flex; gap: 5px; }
+.ddot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.ddot.on { background: var(--acc); }
+.wine-theme .card-back .ddot { background: var(--wine-line); }
+.wine-theme .card-back .ddot.on { background: var(--wine-acc-s); }
+.dial-val { font-size: 12px; color: var(--ink-soft); }
+.wine-theme .card-back .dial-val { color: #8a7060; }
+
+.quiz-q { font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1.3; margin-top: 8px; }
+.quiz-context { font-size: 13px; color: var(--ink-soft); margin-top: 12px; font-style: italic; }
+.quiz-a { font-family: var(--serif); font-size: 28px; font-weight: 400; margin-bottom: 12px; }
+.quiz-context-back { font-size: 13px; color: var(--ink-soft); font-style: italic; }
+
+.deck-controls { margin-top: 8px; }
+.nav-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 10px; }
+.nav-btn {
+  background: var(--card-bg); border: 1.5px solid var(--line);
+  border-radius: 12px; padding: 12px 24px;
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  color: var(--ink); transition: all 0.12s;
+}
+.nav-btn:active { transform: scale(0.97); }
+.nav-btn.primary { background: var(--ink); color: #f5ecd7; border-color: var(--ink); flex: 1; max-width: 180px; }
+.wine-theme .nav-btn { background: var(--wine-card); border-color: var(--wine-line); color: #f0e0d0; }
+.wine-theme .nav-btn.primary { background: var(--wine-acc); border-color: var(--wine-acc); }
+
+.extra-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 10px; }
+.extra-btn {
+  background: none; border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 18px;
+  font-size: 12px; color: var(--ink-soft); cursor: pointer;
+  letter-spacing: 0.04em;
+}
+.wine-theme .extra-btn { border-color: var(--wine-line); color: #8a7060; }
+
+.sr-row { display: flex; gap: 10px; justify-content: center; margin-top: 4px; }
+.sr-btn { border: none; border-radius: 12px; padding: 11px 20px; font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; max-width: 130px; display: none; }
+.sr-wrong  { background: #fde8e8; color: #c0392b; }
+.sr-unsure { background: #fef3e2; color: #e67e22; }
+.sr-right  { background: #e8f8ef; color: #27ae60; }
+
+.sr-stats { font-size: 12px; text-align: center; margin-bottom: 6px; min-height: 18px; }
+.sr-progress-bar-wrap { height: 4px; background: var(--line); border-radius: 2px; margin-bottom: 12px; overflow: hidden; }
+.sr-progress-bar { height: 100%; background: #27ae60; border-radius: 2px; transition: width 0.4s; }
+.wine-theme .sr-progress-bar-wrap { background: var(--wine-line); }
+
+.kbd-hint { font-size: 11px; color: var(--line); text-align: center; margin-top: 10px; letter-spacing: 0.06em; }
+.kbd-key { display: inline-block; background: var(--line); color: var(--card-bg); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; margin: 0 2px; }
+.wine-theme .kbd-key { background: var(--wine-line); color: #2a1820; }
+.sr-badge.right  { background: #e8f8ef; color: #27ae60; }
+.sr-badge.wrong  { background: #fde8e8; color: #c0392b; }
+.sr-badge.unsure { background: #fef3e2; color: #e67e22; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(237,229,216,0.97);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  display: flex; justify-content: space-around;
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; padding: 4px 10px;
+  border-radius: 10px; transition: background 0.12s;
+  border: none; background: none;
+}
+.nav-item:active { background: rgba(0,0,0,0.04); }
+.nav-item .ni { font-size: 20px; }
+.nav-item .nl { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.nav-item.active .nl { color: var(--acc); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen" style="display:block;">
+  <div style="max-width:600px;margin:0 auto;padding:52px 24px 90px;">
+    <div class="home-restaurant">Il Postino</div>
+    <h1 class="home-title">Service<br><em>Prep</em></h1>
+    <div class="home-div"></div>
+    <p class="home-sub">Your complete shift study guide</p>
+
+    <div class="section-label">Reference — Full Detail</div>
+    <div class="card-list">
+      <div class="h-card" onclick="showScreen('menu-screen')">
+        <div class="h-icon">🍽</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">Menu Cards</div><div class="h-count">22 dishes</div></div>
+          <div class="h-desc">Ingredients, mise en place, wine pairings with specific bottles.</div>
+          <div class="h-tags"><span class="h-tag">Antipasti</span><span class="h-tag">Salad</span><span class="h-tag">Pizza</span><span class="h-tag">Pasta</span><span class="h-tag">Entrata</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
+      <div class="h-card wine-card" onclick="showScreen('wine-screen')">
+        <div class="h-icon">🍷</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">Wine Cards</div><div class="h-count">24 wines</div></div>
+          <div class="h-desc">Flavor profiles, dials, every bottle with vintage year and exact region.</div>
+          <div class="h-tags"><span class="h-tag">White Grapes</span><span class="h-tag">Red Grapes</span><span class="h-tag">Sparkling</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
+    </div>
+
+    <div class="section-label">Quick Quiz — One Question, One Answer</div>
+    <div class="card-list">
+      <div class="h-card food-q" onclick="showScreen('foodq-screen')">
+        <div class="h-icon">🧠</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">Food Quiz</div><div class="h-count">130+ cards</div></div>
+          <div class="h-desc">Ingredients, pitch trios, pairings, Italian words, glossary, pasta shapes.</div>
+          <div class="h-tags"><span class="h-tag">Ingredients</span><span class="h-tag">Pitch</span><span class="h-tag">Pairing</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
+      <div class="h-card wine-q" onclick="showScreen('wineq-screen')">
+        <div class="h-icon">⭐</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">Wine Quiz</div><div class="h-count">50+ cards</div></div>
+          <div class="h-desc">Vintages, grape varieties, exact regions, pairings, how to describe each wine.</div>
+          <div class="h-tags"><span class="h-tag">Vintage</span><span class="h-tag">Grape</span><span class="h-tag">Region</span><span class="h-tag">Pairing</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENU SCREEN -->
+<div id="menu-screen" class="screen deck-screen">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Service Prep</div>
+    <div class="deck-title">Menu Cards</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="menu-cats"></div>
+    <div class="progress" id="menu-prog"></div>
+    <div class="sr-stats" id="menu-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="menu-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('menu')">
+      <div class="card-inner" id="menu-card">
+        <div class="card-face card-front" id="menu-front"></div>
+        <div class="card-face card-back" id="menu-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('menu')">←</button>
+        <button class="nav-btn primary" id="menu-flip" onclick="flip('menu')">Flip</button>
+        <button class="nav-btn" onclick="next('menu')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('menu')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('menu')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="menu-sr-row">
+        <button class="sr-btn sr-wrong"  id="menu-sr-wrong"  onclick="srMark('menu','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="menu-sr-unsure" onclick="srMark('menu','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right"  id="menu-sr-right"  onclick="srMark('menu','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WINE SCREEN -->
+<div id="wine-screen" class="screen deck-screen wine-theme">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Service Prep</div>
+    <div class="deck-title">Wine Cards</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="wine-cats"></div>
+    <div class="progress" id="wine-prog"></div>
+    <div class="sr-stats" id="wine-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="wine-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('wine')">
+      <div class="card-inner" id="wine-card">
+        <div class="card-face card-front" id="wine-front"></div>
+        <div class="card-face card-back" id="wine-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('wine')">←</button>
+        <button class="nav-btn primary" id="wine-flip" onclick="flip('wine')">Flip</button>
+        <button class="nav-btn" onclick="next('wine')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('wine')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('wine')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="wine-sr-row">
+        <button class="sr-btn sr-wrong"  id="wine-sr-wrong"  onclick="srMark('wine','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="wine-sr-unsure" onclick="srMark('wine','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right"  id="wine-sr-right"  onclick="srMark('wine','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOD QUIZ SCREEN -->
+<div id="foodq-screen" class="screen deck-screen">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Quick Quiz</div>
+    <div class="deck-title">Food Quiz</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="foodq-cats"></div>
+    <div class="progress" id="foodq-prog"></div>
+    <div class="sr-stats" id="foodq-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="foodq-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('foodq')">
+      <div class="card-inner" id="foodq-card">
+        <div class="card-face card-front" id="foodq-front"></div>
+        <div class="card-face card-back" id="foodq-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('foodq')">←</button>
+        <button class="nav-btn primary" id="foodq-flip" onclick="flip('foodq')">Flip</button>
+        <button class="nav-btn" onclick="next('foodq')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('foodq')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('foodq')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="foodq-sr-row">
+        <button class="sr-btn sr-wrong"  id="foodq-sr-wrong"  onclick="srMark('foodq','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="foodq-sr-unsure" onclick="srMark('foodq','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right"  id="foodq-sr-right"  onclick="srMark('foodq','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WINE QUIZ SCREEN -->
+<div id="wineq-screen" class="screen deck-screen wine-theme">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Quick Quiz</div>
+    <div class="deck-title">Wine Quiz</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="wineq-cats"></div>
+    <div class="progress" id="wineq-prog"></div>
+    <div class="sr-stats" id="wineq-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="wineq-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('wineq')">
+      <div class="card-inner" id="wineq-card">
+        <div class="card-face card-front" id="wineq-front"></div>
+        <div class="card-face card-back" id="wineq-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('wineq')">←</button>
+        <button class="nav-btn primary" id="wineq-flip" onclick="flip('wineq')">Flip</button>
+        <button class="nav-btn" onclick="next('wineq')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('wineq')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('wineq')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="wineq-sr-row">
+        <button class="sr-btn sr-wrong"  id="wineq-sr-wrong"  onclick="srMark('wineq','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="wineq-sr-unsure" onclick="srMark('wineq','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right"  id="wineq-sr-right"  onclick="srMark('wineq','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
+    <span class="ni">🏠</span><span class="nl">Home</span>
+  </button>
+  <button class="nav-item" id="nav-menu" onclick="showScreen('menu-screen')">
+    <span class="ni">🍽</span><span class="nl">Menu</span>
+  </button>
+  <button class="nav-item" id="nav-wine" onclick="showScreen('wine-screen')">
+    <span class="ni">🍷</span><span class="nl">Wine</span>
+  </button>
+  <button class="nav-item" id="nav-foodq" onclick="showScreen('foodq-screen')">
+    <span class="ni">🧠</span><span class="nl">Food Q</span>
+  </button>
+  <button class="nav-item" id="nav-wineq" onclick="showScreen('wineq-screen')">
+    <span class="ni">⭐</span><span class="nl">Wine Q</span>
+  </button>
+</nav>
+
+<script>
+
+const DISHES = [
+  {"name":"Mozzarella Caprese","price":29,"category":"Antipasti","pitch":["bufala mozzarella","vine tomatoes","aged balsamic"],"full":"imported bufala mozzarella, vine tomatoes, aged balsamic & basil","mise":"Fork + Spoon","wine":"Light crisp white or sparkling","bottles":["Prosecco by glass — $18","Verdicchio — Umani Ronchi $65","Pinot Grigio by glass — $17"],"note":"Bufala = water buffalo milk mozzarella — much creamier and richer than regular mozzarella"},
+  {"name":"Burrata & Prosciutto","price":32,"category":"Antipasti","pitch":["Italian burrata","prosciutto di parma","sicilian pistachio"],"full":"Italian burrata, prosciutto di parma, sicilian pistachio, aged balsamic","mise":"Fork + Spoon","wine":"Light white or Prosecco — richness needs freshness","bottles":["Prosecco — Castello di Roncade $80","Pinot Grigio by glass — $17","Verdicchio — Umani Ronchi $65"],"note":"Burrata = mozzarella shell with creamy stracciatella center. Sicilian pistachios add crunch and richness"},
+  {"name":"Calamari Fritti","price":29,"category":"Antipasti","pitch":["fried calamari","fresh lemon","aioli"],"full":"lightly battered & fried calamari, fresh lemon & aioli","mise":"Fork + Spoon","wine":"Light crisp white","bottles":["Pinot Grigio by glass — $17","Prosecco by glass — $18","Verdicchio — Umani Ronchi $65"],"note":"Fritti = Italian for fried. Aioli = garlic mayo. Lightly battered = delicate, not heavy"},
+  {"name":"Polpette","price":27,"category":"Antipasti","pitch":["veal & pork meatballs","tomato sauce","parmesan"],"full":"veal & pork braised in tomato sauce, topped with parmesan & basil","mise":"Fork + Spoon","wine":"Italian red — Sangiovese or Chianti","bottles":["Chianti — Giulio Straccali $65","Nero d'Avola — Vigneti Zabu $85","Chianti Classico — Badia a Coltibuono $98"],"note":"Braised in sauce = tender and deeply flavoured. Veal & pork mix = softer and more delicate than beef only"},
+  {"name":"Carpaccio di Manzo","price":29,"category":"Antipasti","pitch":["beef tenderloin carpaccio","arugula","parmigiano"],"full":"beef tenderloin carpaccio, arugula, parmigiano, lemon","mise":"Fork + Spoon","wine":"Light red or full white","bottles":["Pinot Grigio by glass — $17","Nebbiolo — Produttori del Barbaresco $115","Verdicchio — Umani Ronchi $65"],"note":"Carpaccio = raw beef sliced paper-thin. Dressed with lemon, EVOO and shaved parmesan"},
+  {"name":"Shrimp Fra Diavolo","price":36,"category":"Antipasti","pitch":["shrimp","calabrian chilli","grilled crostini"],"full":"tomato, garlic, Calabrian chilli, white wine, grilled crostini","mise":"Fork + Spoon","wine":"Crisp white with body","bottles":["Pecorino — Velenosi $70","Verdicchio — Umani Ronchi $65","Greco di Tufo — Mastroberardino $105"],"note":"Fra Diavolo = 'Brother Devil' — named for the spicy tomato sauce. Calabrian chilli = significant heat"},
+  {"name":"Cavolo","price":19,"category":"Salad","pitch":["tuscan kale","pine nuts","parmigiano"],"full":"tuscan kale, pine nuts, honey-lemon dressing, parmigiano","mise":"Fork + Spoon","wine":"Crisp Italian white","bottles":["Pinot Grigio by glass — $17","Verdicchio — Umani Ronchi $65","Chardonnay — Roca delle Macie $80"],"note":"Cavolo = Italian for cabbage/kale. Tuscan kale = lacinato/dinosaur kale — heartier and more savory"},
+  {"name":"Caesar","price":18,"category":"Salad","pitch":["romaine","parmigiano","garlic croutons"],"full":"creamy dressing, romaine, parmigiano, garlic croutons","mise":"Fork + Spoon","wine":"Light white or sparkling","bottles":["Prosecco by glass — $18","Pinot Grigio by glass — $17","Chardonnay — Roca delle Macie $80"],"note":"Classic Caesar — ask about anchovy in dressing for dietary restrictions"},
+  {"name":"Rucola","price":17,"category":"Salad","pitch":["arugula","apples","ricotta salata"],"full":"arugula, apples, pecans, ricotta salata, balsamic","mise":"Fork + Spoon","wine":"Crisp white with freshness","bottles":["Pinot Grigio by glass — $17","Verdicchio — Umani Ronchi $65","Pecorino — Velenosi $70"],"note":"Ricotta salata = firm salted ricotta, less creamy than fresh — mild and slightly tangy"},
+  {"name":"Diavola","price":26,"category":"Pizza","pitch":["soppressata","mushrooms","mozzarella"],"full":"spicy soppressata, mushrooms, mozzarella, tomato sauce","mise":"Pizza Plate — cut into slices","wine":"Light Italian red","bottles":["Chianti — Giulio Straccali $65","Nero d'Avola — Vigneti Zabu $85","Chianti by glass — $17"],"note":"Soppressata = spicy Italian dry salami. Diavola = 'she-devil' — this is the spiciest pizza"},
+  {"name":"Margherita","price":25,"category":"Pizza","pitch":["tomato sauce","fior di latte","basil"],"full":"tomato sauce, fior di latte, basil","mise":"Pizza Plate — cut into slices","wine":"Light white or red by glass","bottles":["Prosecco by glass — $18","Chianti by glass — $17","Pinot Grigio by glass — $17"],"note":"Fior di latte = fresh cow's milk mozzarella. Named after Queen Margherita — the classic"},
+  {"name":"Salsiccia","price":28,"category":"Pizza","pitch":["Italian sausage","caramelized onion","roasted red peppers"],"full":"Italian sausage, caramelized onion, roasted red peppers, fior di latte, tomato sauce","mise":"Pizza Plate — cut into slices","wine":"Medium Italian red","bottles":["Chianti — Giulio Straccali $65","Nero d'Avola — Vigneti Zabu $85","Cabernet Blend — Velenosi 'Ninfa' $110"],"note":"Salsiccia = Italian for sausage. Caramelized onion adds sweetness to balance the savory sausage"},
+  {"name":"Parma","price":27,"category":"Pizza","pitch":["prosciutto di parma","fior di latte","bufala mozzarella"],"full":"prosciutto di parma, fior di latte, arugula, bufala mozzarella","mise":"Pizza Plate — cut into slices","wine":"Light white or Prosecco","bottles":["Prosecco — Castello di Roncade $80","Pinot Grigio by glass — $17","Verdicchio — Umani Ronchi $65"],"note":"Prosciutto is added after baking so it stays tender. Has two types of cheese — fior di latte and bufala"},
+  {"name":"Mushroom & Truffle","price":29,"category":"Pizza","pitch":["roasted mushrooms","truffle oil","fontina"],"full":"roasted mushrooms, caramelized onions, fontina, truffle oil","mise":"Pizza Plate — cut into slices","wine":"Medium white or light red","bottles":["Chardonnay — Roca delle Macie $80","Langhe Rossese — Giovanni Manzone $98","Nebbiolo — Produttori del Barbaresco $115"],"note":"Fontina = semi-firm Italian mountain cheese, nutty and buttery. Truffle oil = earthy, aromatic finish"},
+  {"name":"Pepperoni","price":25,"category":"Pizza","pitch":["venetian pepperoni","mozzarella","tomato sauce"],"full":"venetian pepperoni, mozzarella, tomato sauce","mise":"Pizza Plate — cut into slices","wine":"Light red or by glass","bottles":["Chianti by glass — $17","Nero d'Avola — Vigneti Zabu $85","Sangiovese by glass — $19"],"note":"Venetian pepperoni = cup-and-char style, curls up and crisps — different from flat American pepperoni"},
+  {"name":"Fettuccine Limone","price":27,"category":"Pasta","pitch":["preserved lemon","sautéed leeks","cream"],"full":"preserved lemon, sautéed leeks, cream, parmigiano, arugula","mise":"Fork + Spoon","wine":"Crisp white with acidity","bottles":["Verdicchio — Umani Ronchi $65","Pecorino — Velenosi $70","Chardonnay — Roca delle Macie $80"],"note":"Preserved lemon = intensely savory and salty, not simply citrus. Leeks = mild sweet allium"},
+  {"name":"Tagliatelle Ragu","price":29,"category":"Pasta","pitch":["classic tuscan bolognese","Bianco di Napoli tomatoes","basil"],"full":"classic tuscan bolognese, Bianco di Napoli tomatoes, basil","mise":"Fork + Spoon","wine":"Tuscan red — Sangiovese loves tomato","bottles":["Chianti — Giulio Straccali $65","Chianti Classico — Badia a Coltibuono $98","Nero d'Avola — Vigneti Zabu $85"],"note":"Bianco di Napoli = premium San Marzano-style tomatoes. Tagliatelle is a flat egg pasta from Emilia-Romagna"},
+  {"name":"Orecchiette Sausage & Rapini","price":29,"category":"Pasta","pitch":["italian sausage","sautéed rapini","confit garlic"],"full":"italian sausage, confit garlic, sautéed rapini, chili","mise":"Fork + Spoon","wine":"Medium Italian red or white","bottles":["Chianti — Giulio Straccali $65","Verdicchio — Umani Ronchi $65","Etna Rosso — Planeta $120"],"note":"Orecchiette = 'little ears' pasta from Puglia. Rapini = broccoli rabe — bitter, earthy green vegetable"},
+  {"name":"Rigatoni Vodka","price":32,"category":"Pasta","pitch":["crispy pancetta","vodka rose sauce","calabrian chili"],"full":"crispy pancetta, sweet onions, calabrian chili, vodka rose sauce","mise":"Fork + Spoon","wine":"Light-medium red or white","bottles":["Chianti — Giulio Straccali $65","Nero d'Avola — Vigneti Zabu $85","Pecorino — Velenosi $70"],"note":"Vodka cuts through the cream and amplifies tomato. Calabrian chili adds heat. Pancetta = Italian cured pork belly"},
+  {"name":"Pappardelle Funghi","price":34,"category":"Pasta","pitch":["wild mushrooms","truffle & porcini cream sauce","parmigiano"],"full":"wild mushrooms, truffle & porcini cream sauce, parmigiano","mise":"Fork + Spoon","wine":"Medium white or earthy red","bottles":["Chardonnay — Roca delle Macie $80","Nebbiolo — Produttori del Barbaresco $115","Etna Bianco — Planeta $110"],"note":"Pappardelle = wide flat egg pasta, perfect for holding thick sauces. Porcini = prized dried/fresh mushroom"},
+  {"name":"Seafood Linguine","price":39,"category":"Pasta","pitch":["fresh daily seafood","white wine","garlic & olive oil"],"full":"fresh daily seafood sautéed with tomatoes, white wine, garlic & olive oil","mise":"Fork + Spoon","wine":"Mineral Italian white — classic pairing","bottles":["Verdicchio — Umani Ronchi $65","Etna Bianco — Planeta $110","Greco di Tufo — Mastroberardino $105"],"note":"Seafood changes daily — ask kitchen for today's selection. White wine, garlic & olive oil = classic Italian seafood base"},
+  {"name":"Prime Striploin","price":68,"category":"Entrata","pitch":["12oz dry aged prime striploin","red wine demi glace","grilled vegetables"],"full":"12oz dry aged prime striploin, grilled vegetables, roasted potatoes, red wine demi glace","mise":"Fork + Steak Knife","wine":"Bold structured red","bottles":["Barolo — Arnaldo Rivera $175","Bordeaux — Domaine les Carmels $125","Montepulciano — Marina Cvetić $140"],"note":"12oz dry-aged — mention this detail when describing. Demi glace = intensely reduced red wine sauce"},
+  {"name":"Grilled Branzino","price":42,"category":"Entrata","pitch":["grilled sea bass","couscous","sauce vierge"],"full":"grilled sea bass fillets, couscous, sauce vierge, charred lemon","mise":"Fork + Butter Knife","wine":"Mineral white — classic fish pairing","bottles":["Etna Bianco — Planeta $110","Verdicchio — Umani Ronchi $65","Chablis — Madame Veuve Point $140"],"note":"Branzino = European sea bass. Sauce vierge = French vinaigrette with tomato, basil, lemon — fresh and bright"},
+  {"name":"Chicken Parmigiana","price":45,"category":"Entrata","pitch":["chicken cutlet","tomato & mozzarella","fusilli rosata"],"full":"chicken cutlet baked with tomato & mozzarella, served with fusilli rosata","mise":"Fork + Steak Knife","wine":"Medium Italian red","bottles":["Chianti — Giulio Straccali $65","Chianti Classico — Badia a Coltibuono $98","Nero d'Avola — Vigneti Zabu $85"],"note":"Fusilli rosata = pasta in a pink cream-tomato sauce. One of Italy's most beloved comfort dishes"}
+];
+
+const WINES = [
+  {"type":"grape","color":"white","category":"White Grapes","name":"Verdicchio","pronunciation":"ver-DIK-kyo","flavors":["citrus and green apple","almond and fennel","crisp mineral finish"],"dials":{"Body":2,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Verdicchio — Umani Ronchi 'Villa Bianchi'","region":"Marche, Italy","year":"2023","price":"$65"}],"guest_line":"Central Italian white — bright citrus with a pleasantly bitter almond finish. Very food-friendly.","note":"Verdicchio means 'little green one' — referring to its greenish hue. Classic match for seafood.","subcat":"Verdicchio"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Pecorino","pronunciation":"pek-oh-REE-noh","flavors":["white peach","herbal notes","fresh and dry"],"dials":{"Body":3,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Pecorino — Velenosi 'Villa Angela Falerio'","region":"Marche, Italy","year":"2024","price":"$70"}],"guest_line":"Don't confuse with the cheese — this is a crisp, aromatic white from central Italy with lovely peach notes.","note":"Same name as the sheep's milk cheese but entirely different — an ancient grape rediscovered in Abruzzo.","subcat":"Pecorino"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Pinot Grigio","pronunciation":"PEE-noh GREE-joh","flavors":["pear and white peach","light citrus","clean dry finish"],"dials":{"Body":2,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Pinot Grigio — Giulio Straccali","region":"Lombardia, Italy","year":"2024","price":"$75"},{"bottle":"Pinot Grigio by glass","region":"Lombardia, Italy","year":"NV","price":"$17"}],"guest_line":"Italy's most popular white — light, clean and refreshing. Perfect aperitif or with lighter dishes.","note":"Lombardia style = very light, almost neutral. More character from Alto Adige or Friuli producers.","subcat":"Pinot Grigio"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Chardonnay","pronunciation":"shar-doh-NAY","flavors":["apple or butter","vanilla or citrus","mineral or cream"],"dials":{"Body":4,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Chardonnay — Roca delle Macie 'Moonlite'","region":"Toscana, Italy","year":"2024","price":"$80"},{"bottle":"Chardonnay — Antinori 'Bramito'","region":"Umbria, Italy","year":"2023","price":"$100"},{"bottle":"Chardonnay — Pietrabianca 'Bocca di Lupo'","region":"Apulia, Italy","year":"2024","price":"$130"},{"bottle":"Chablis — Madame Veuve Point","region":"France","year":"2024","price":"$140"},{"bottle":"Chardonnay by glass","region":"Toscana","year":"NV","price":"$19"}],"guest_line":"Two very different styles: Moonlite and Antinori are Italian — lighter and fresher. Chablis is unoaked and mineral.","note":"Chablis IS Chardonnay — just unoaked. Pietrabianca at $130 is their most complex, richest expression.","subcat":"Chardonnay"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Greco di Tufo","pronunciation":"GREH-koh dee TOO-foh","flavors":["peach","almond","mineral"],"dials":{"Body":3,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Greco di Tufo — Mastroberardino","region":"Campania, Italy","year":"2024","price":"$105"}],"guest_line":"Southern Italian white — ripe peach and almond with a dry mineral finish. Outstanding with seafood.","note":"'Tufo' = the volcanic soil it grows in. Mastroberardino is one of Campania's most historic producers.","subcat":"Greco di Tufo"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Etna Bianco","pronunciation":"ET-na BYAHN-koh","flavors":["citrus","volcanic mineral","white flowers"],"dials":{"Body":3,"Acidity":5,"Sweetness":1},"on_list":[{"bottle":"Etna Bianco — Planeta","region":"Sicilia, Italy","year":"2023","price":"$110"}],"guest_line":"Sicilian volcanic white — strikingly dry and mineral with bright citrus and a distinctive ashy finish.","note":"Grown on the slopes of Mount Etna from the Carricante grape. Unlike anything else on the list.","subcat":"Etna Bianco"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Langhe Rossese","pronunciation":"LAHN-gay roh-SEH-zeh","flavors":["white peach and apricot","delicate floral","crisp mineral finish"],"dials":{"Body":2,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Langhe Rossese — Giovanni Manzone","region":"Piemonte, Italy","year":"2023","price":"$98"}],"guest_line":"A rare indigenous Piedmontese white — light, floral and very food-friendly. Great for guests who want something different.","note":"Rossese Bianco is an obscure native grape. Manzone is primarily a renowned Barolo producer.","subcat":"Langhe Rossese"},
+  {"type":"grape","color":"white","category":"White Grapes","name":"Chablis","pronunciation":"shah-BLEE","flavors":["green apple","flinty mineral","very dry and clean"],"dials":{"Body":2,"Acidity":5,"Sweetness":1},"on_list":[{"bottle":"Chablis — Madame Veuve Point","region":"France","year":"2024","price":"$140"}],"guest_line":"Unoaked Chardonnay from northern Burgundy — nothing like buttery California Chardonnay. Crisp, mineral and elegant.","note":"Chablis is always Chardonnay but always unoaked — the flinty, steely character comes from the local Kimmeridgian chalk soil.","subcat":"Chablis"},
+  {"type":"grape","color":"red","category":"Red Grapes","name":"Chianti / Sangiovese","pronunciation":"kee-AHN-tee / san-joh-VAY-zeh","flavors":["tart cherry","herbs","leather"],"dials":{"Body":3,"Acidity":5,"Tannin":4},"on_list":[{"bottle":"Chianti — Giulio Straccali","region":"Toscana, Italy","year":"2024","price":"$65"},{"bottle":"Chianti by glass","region":"Toscana","year":"NV","price":"$17"},{"bottle":"Chianti Classico — Badia a Coltibuono","region":"Toscana, Italy","year":"2022","price":"$98"},{"bottle":"Chianti Gran Selezione — Il Palazzino","region":"Toscana, Italy","year":"2021","price":"$150"}],"guest_line":"The Italian food grape — bright cherry, high acidity, built for tomato and pasta. Three quality tiers on our list.","note":"All three are Sangiovese from Tuscany. Gran Selezione = top tier, minimum 30 months aging.","subcat":"Chianti"},
+  {"type":"grape","color":"red","category":"Red Grapes","name":"Nero d'Avola","pronunciation":"NEH-roh DAH-voh-lah","flavors":["black cherry","chocolate","dried herbs"],"dials":{"Body":4,"Acidity":3,"Tannin":3},"on_list":[{"bottle":"Nero d'Avola — Vigneti Zabu 'Chiantari'","region":"Sicilia, Italy","year":"2023","price":"$85"}],"guest_line":"Sicilian red — rich dark fruit with chocolate and herbs, soft tannins and a smooth finish.","note":"Sicily's most important red grape. Italy's answer to Malbec — dark, smooth, crowd-pleasing.","subcat":"Nero d'Avola"},
+  {"type":"grape","color":"red","category":"Red Grapes","name":"Nebbiolo / Barbaresco","pronunciation":"neb-ee-OH-loh / bar-bah-RES-koh","flavors":["tar","roses","dried cherry"],"dials":{"Body":5,"Acidity":5,"Tannin":5},"on_list":[{"bottle":"Nebbiolo — Produttori del Barbaresco","region":"Piemonte, Italy","year":"2024","price":"$115"}],"guest_line":"Barbaresco is Nebbiolo — the same grape as Barolo but from a neighbouring village. Elegant and complex with tar and roses.","note":"Produttori del Barbaresco is a renowned cooperative in Piedmont. Less tannic than Barolo but still needs food.","subcat":"Nebbiolo"},
+  {"type":"grape","color":"red","category":"Red Grapes","name":"Etna Rosso","pronunciation":"ET-na ROS-oh","flavors":["red cherry","volcanic mineral","dried herbs"],"dials":{"Body":3,"Acidity":4,"Tannin":3},"on_list":[{"bottle":"Etna Rosso — Planeta","region":"Sicilia, Italy","year":"2023","price":"$120"}],"guest_line":"Sicilian volcanic red — elegant and earthy with red cherry and a distinctive mineral, smoky edge.","note":"Made from Nerello Mascalese on Mt Etna. Often compared to Burgundy for its elegance.","subcat":"Etna Rosso"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Cabernet Blend — Velenosi 'Ninfa'","pronunciation":"veh-leh-NOH-zee — NEEN-fah","flavors":["blackcurrant and plum","cedar and dark chocolate","firm structured tannins"],"dials":{"Body":4,"Acidity":3,"Tannin":4},"on_list":[{"bottle":"Cabernet Blend — Velenosi 'Ninfa'","region":"Le Marche, Italy","year":"2022","price":"$110"}],"guest_line":"A Bordeaux-style blend from central Italy — bold, structured and age-worthy. For guests who love Cabernet.","note":"Cabernet Sauvignon dominant with Merlot from Le Marche on Italy's Adriatic coast.","subcat":"Cabernet Blend"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Barolo — Arnaldo Rivera","pronunciation":"bah-ROH-loh — ar-NAL-doh ree-VEH-rah","flavors":["tar","roses","dried cherry and spice"],"dials":{"Body":5,"Acidity":5,"Tannin":5},"on_list":[{"bottle":"Barolo — Arnaldo Rivera 'Undicicomuni'","region":"Piemonte, Italy","year":"2020","price":"$175"}],"guest_line":"The king of Italian wine — intense and complex with tar and roses, a very long finish. Needs food.","note":"100% Nebbiolo from Piedmont. High everything: tannin, acid, body. 2020 is a great vintage.","subcat":"Barolo"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Bordeaux — Domaine les Carmels","pronunciation":"bor-DOH — doh-MEN lay car-MEL","flavors":["blackcurrant and tobacco","earthy and savoury","medium tannins"],"dials":{"Body":3,"Acidity":3,"Tannin":3},"on_list":[{"bottle":"Bordeaux — Domaine les Carmels 'Les Caprices'","region":"France","year":"2022","price":"$125"}],"guest_line":"Classic Bordeaux — Cabernet and Merlot blend, earthy and structured. Ideal with red meat.","note":"Bordeaux blends Cabernet Sauvignon, Merlot and Cabernet Franc. A reliable, classic French choice.","subcat":"Bordeaux"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Montepulciano — Marina Cvetić","pronunciation":"mon-teh-pul-CHAH-noh — mah-REE-nah SVEH-tich","flavors":["dark plum","earthy","leather and spice"],"dials":{"Body":4,"Acidity":3,"Tannin":4},"on_list":[{"bottle":"Montepulciano Riserva — Marina Cvetić","region":"Abruzzo, Italy","year":"2020","price":"$140"}],"guest_line":"Hearty central Italian red — dark fruit, earthy and full-bodied with enough structure for a steak.","note":"Riserva = aged longer. Marina Cvetić is one of Abruzzo's most celebrated producers.","subcat":"Montepulciano"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Bolgheri — Tenuta Argentiera","pronunciation":"BOL-geh-ree — teh-NOO-tah ar-jen-TYEH-rah","flavors":["dark fruit","cedar","silky tannins"],"dials":{"Body":4,"Acidity":3,"Tannin":4},"on_list":[{"bottle":"Bolgheri — Tenuta Argentiera 'Poggio ai Ginepri'","region":"Toscana, Italy","year":"2023","price":"$135"}],"guest_line":"Super Tuscan style — blends Cabernet and Merlot with Italian character. The gateway to Bolgheri.","note":"Bolgheri is where Super Tuscans were born. This is a Cabernet/Merlot/Petit Verdot blend.","subcat":"Bolgheri"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Chianti Gran Selezione — Il Palazzino","pronunciation":"kee-AHN-tee gran seh-leh-TSYOH-neh","flavors":["tart cherry","dried herbs","earthy complexity"],"dials":{"Body":4,"Acidity":4,"Tannin":4},"on_list":[{"bottle":"Chianti Gran Selezione — Il Palazzino","region":"Toscana, Italy","year":"2021","price":"$150"}],"guest_line":"The top tier of Chianti — same grape as the entry Chianti but with 30+ months of aging. Complex and serious.","note":"Gran Selezione is the highest classification in Chianti Classico. Il Palazzino is a top small producer.","subcat":"Chianti Gran Selezione"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Brunello — Gaja 'Pieve Santa Restituta'","pronunciation":"broo-NEL-oh — GAH-yah","flavors":["concentrated dark cherry","tobacco and leather","extraordinary complexity"],"dials":{"Body":5,"Acidity":4,"Tannin":5},"on_list":[{"bottle":"Brunello — Gaja 'Pieve Santa Restituta'","region":"Montalcino, Toscana, Italy","year":"2020","price":"$295"}],"guest_line":"Gaja is one of Italy's most legendary producers — this Brunello is 100% Sangiovese aged 5+ years. A truly special wine.","note":"Brunello must be 100% Sangiovese and aged minimum 5 years by law. Gaja acquired Pieve Santa Restituta in 1994.","subcat":"Brunello"},
+  {"type":"bottle","color":"red","category":"Red Grapes","name":"Super Tuscan — Antinori 'Tignanello'","pronunciation":"tee-nya-NEL-oh — an-tee-NOH-ree","flavors":["ripe blackberry and plum","cedar and tobacco","incredible length"],"dials":{"Body":5,"Acidity":3,"Tannin":4},"on_list":[{"bottle":"Super Tuscan — Antinori 'Tignanello'","region":"Chianti Classico, Toscana, Italy","year":"2022","price":"$410"}],"guest_line":"The most famous Super Tuscan in the world — Antinori's iconic Tignanello, a Sangiovese/Cabernet blend from Chianti Classico.","note":"Created in 1971 by Antinori, Tignanello broke Italian wine rules by adding Cabernet to Sangiovese. A landmark wine.","subcat":"Tignanello"},
+  {"type":"bottle","color":"sparkling","category":"Sparkling & Rosé","name":"Prosecco — Castello di Roncade","pronunciation":"pro-SEK-oh — kas-TEL-oh dee ron-KAH-deh","flavors":["green apple and pear","white peach","light gentle fizz"],"dials":{"Body":2,"Acidity":3,"Sweetness":2},"on_list":[{"bottle":"Prosecco — Castello di Roncade","region":"Veneto, Italy","year":"NV","price":"$80"},{"bottle":"Prosecco — Zardetto 'Refosso'","region":"Veneto, Italy","year":"NV","price":"$85"},{"bottle":"Prosecco by glass","region":"Veneto","year":"NV","price":"$18"}],"guest_line":"Italy's everyday bubbly — lighter and fruitier than Champagne, great as an aperitif or with lighter dishes.","note":"Made from Glera grape. Tank method keeps it fresh. Zardetto at $85 is a slight step up.","subcat":"Prosecco"},
+  {"type":"bottle","color":"sparkling","category":"Sparkling & Rosé","name":"Rosato — Apulia","pronunciation":"roh-ZAH-toh","flavors":["fresh strawberry","peach","bone dry crisp"],"dials":{"Body":2,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Rosato — Apulia by glass","region":"Apulia, Italy","year":"NV","price":"$17"}],"guest_line":"Dry Italian rosé from Puglia — fresh, light and very food-friendly. Perfect aperitif wine.","note":"Southern Italian rosé — typically made from Negroamaro or Primitivo grapes, bone dry and refreshing.","subcat":"Rosato"},
+  {"type":"bottle","color":"sparkling","category":"Sparkling & Rosé","name":"Champagne — Veuve Clicquot","pronunciation":"VURV klee-KOH","flavors":["brioche and toasted almond","citrus and green apple","creamy persistent bubbles"],"dials":{"Body":3,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Champagne — Veuve Clicquot Brut","region":"France","year":"NV","price":"$200"}],"guest_line":"The iconic yellow label — rich, full and toasty. One of the most recognisable Champagnes in the world.","note":"Pinot Noir dominant blend. NV = Non-Vintage, blended across years for consistency. Always a safe celebratory choice.","subcat":"Champagne"},
+  {"type":"bottle","color":"sparkling","category":"Sparkling & Rosé","name":"Champagne Rosé — Moët & Chandon","pronunciation":"moh-ET ay shah-DON","flavors":["wild strawberry and raspberry","brioche and vanilla","fine elegant bubbles"],"dials":{"Body":3,"Acidity":3,"Sweetness":2},"on_list":[{"bottle":"Champagne Rosé Impérial — Moët & Chandon","region":"France","year":"NV","price":"$225"}],"guest_line":"Rosé Champagne adds red fruit to classic Champagne structure — beautiful colour and very celebratory.","note":"Made by blending still Pinot Noir into the cuvée. One of the most recognised Champagne houses worldwide.","subcat":"Rosé Champagne"}
+];
+
+const FOOD_CARDS = [
+  // INGREDIENTS
+  {"section":"Ingredients","q":"What type of mozzarella is in the Caprese?","a":"Bufala — imported water buffalo milk mozzarella","context":"Much creamier and richer than regular cow's milk mozzarella"},
+  {"section":"Ingredients","q":"What sauce is in the Shrimp Fra Diavolo?","a":"Tomato, garlic, Calabrian chilli, white wine","context":"Served with grilled crostini — this dish has significant heat"},
+  {"section":"Ingredients","q":"What is in the Pappardelle Funghi sauce?","a":"Truffle & porcini cream sauce","context":"With wild mushrooms and parmigiano on top"},
+  {"section":"Ingredients","q":"What type of tomatoes are in the Tagliatelle Ragu?","a":"Bianco di Napoli tomatoes","context":"Premium San Marzano-style tomatoes — sweeter, less acidic"},
+  {"section":"Ingredients","q":"What greens are in the Orecchiette?","a":"Rapini (broccoli rabe) — bitter, earthy green","context":"Also has confit garlic and chili"},
+  {"section":"Ingredients","q":"What sauce comes with the Prime Striploin?","a":"Red wine demi glace","context":"12oz dry aged — also grilled vegetables and roasted potatoes"},
+  {"section":"Ingredients","q":"What comes with the Grilled Branzino?","a":"Couscous, sauce vierge, charred lemon","context":"Grilled sea bass fillets"},
+  {"section":"Ingredients","q":"What pasta comes with Chicken Parmigiana?","a":"Fusilli rosata","context":"A pink cream-tomato sauce — not plain tomato"},
+  {"section":"Ingredients","q":"What cheeses are on the Parma pizza?","a":"Two — fior di latte and bufala mozzarella","context":"Plus prosciutto di parma and arugula"},
+  {"section":"Ingredients","q":"What cheese is on the Mushroom & Truffle pizza?","a":"Fontina","context":"With roasted mushrooms, caramelized onions, truffle oil"},
+  {"section":"Ingredients","q":"What nut is in the Burrata & Prosciutto?","a":"Sicilian pistachio","context":"Adds crunch and a rich, slightly sweet contrast"},
+  {"section":"Ingredients","q":"What dressing is on the Cavolo salad?","a":"Honey-lemon dressing","context":"With tuscan kale, pine nuts, parmigiano"},
+  {"section":"Ingredients","q":"What cheese is in the Rucola salad?","a":"Ricotta salata","context":"Firm and slightly salty — not creamy like fresh ricotta"},
+  {"section":"Ingredients","q":"What is in the Fettuccine Limone?","a":"Preserved lemon, sautéed leeks, cream, parmigiano, arugula","context":"The preserved lemon is savory-salty, not just citrusy"},
+  {"section":"Ingredients","q":"What is in the Rigatoni Vodka?","a":"Crispy pancetta, sweet onions, Calabrian chili, vodka rose sauce","context":"The vodka cuts through the cream and amplifies the tomato"},
+  // PITCH
+  {"section":"Pitch","q":"3 ingredients to pitch for Mozzarella Caprese","a":"bufala mozzarella · vine tomatoes · aged balsamic","context":"Antipasti"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Burrata & Prosciutto","a":"Italian burrata · prosciutto di parma · sicilian pistachio","context":"Antipasti"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Shrimp Fra Diavolo","a":"shrimp · calabrian chilli · grilled crostini","context":"Antipasti — warn guests it's spicy"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Polpette","a":"veal & pork · tomato sauce · parmesan","context":"Antipasti — braised, not fried"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Carpaccio di Manzo","a":"beef tenderloin · arugula · parmigiano","context":"Antipasti — raw beef, paper-thin"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Calamari Fritti","a":"fried calamari · fresh lemon · aioli","context":"Antipasti — lightly battered"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Pappardelle Funghi","a":"wild mushrooms · truffle & porcini cream sauce · parmigiano","context":"Pasta — earthy and rich"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Rigatoni Vodka","a":"crispy pancetta · vodka rose sauce · calabrian chili","context":"Pasta — creamy with heat"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Tagliatelle Ragu","a":"tuscan bolognese · Bianco di Napoli tomatoes · basil","context":"Pasta — classic Italian comfort"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Orecchiette Sausage & Rapini","a":"italian sausage · sautéed rapini · confit garlic","context":"Pasta — rustic and savory"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Fettuccine Limone","a":"preserved lemon · sautéed leeks · cream","context":"Pasta — bright and creamy"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Seafood Linguine","a":"fresh daily seafood · white wine · garlic & olive oil","context":"Pasta — ask kitchen for today's seafood"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Prime Striploin","a":"12oz dry aged prime striploin · red wine demi glace · grilled vegetables","context":"Entrata — most expensive main"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Grilled Branzino","a":"grilled sea bass · couscous · sauce vierge","context":"Entrata — whole sea bass fillets"},
+  {"section":"Pitch","q":"3 ingredients to pitch for Chicken Parmigiana","a":"chicken cutlet · tomato & mozzarella · fusilli rosata","context":"Entrata — baked, not fried"},
+  // PAIRING
+  {"section":"Pairing","q":"What wine pairs with Prime Striploin?","a":"Barolo or Montepulciano Riserva","context":"Arnaldo Rivera $175 or Marina Cvetić $140 — bold reds"},
+  {"section":"Pairing","q":"What wine pairs with Seafood Linguine?","a":"Verdicchio or Etna Bianco","context":"Umani Ronchi $65 or Planeta $110 — mineral whites love seafood"},
+  {"section":"Pairing","q":"What wine pairs with Tagliatelle Ragu?","a":"Chianti — Sangiovese loves tomato","context":"Giulio Straccali $65 is the classic match"},
+  {"section":"Pairing","q":"What wine pairs with Pappardelle Funghi?","a":"Chardonnay or Nebbiolo","context":"Roca delle Macie $80 or Barbaresco $115 — earthy dish needs body"},
+  {"section":"Pairing","q":"What wine pairs with Grilled Branzino?","a":"Etna Bianco or Verdicchio","context":"Planeta $110 or Umani Ronchi $65 — mineral whites"},
+  {"section":"Pairing","q":"What wine pairs with Burrata & Prosciutto?","a":"Prosecco or Pinot Grigio","context":"Richness needs freshness — keep it light"},
+  {"section":"Pairing","q":"What wine pairs with Shrimp Fra Diavolo?","a":"Pecorino or Greco di Tufo","context":"Velenosi $70 or Mastroberardino $105 — body handles the spice"},
+  {"section":"Pairing","q":"What wine pairs with Chicken Parmigiana?","a":"Chianti or Nero d'Avola","context":"Medium reds — tomato sauce needs Italian acidity"},
+  {"section":"Pairing","q":"What wine pairs with Polpette?","a":"Chianti or Chianti Classico","context":"Braised meat in tomato — Sangiovese is the classic match"},
+  {"section":"Pairing","q":"What sparkling wine for a celebration?","a":"Champagne Rosé Impérial — Moët & Chandon","context":"$225 — beautiful colour, very celebratory"},
+  // ITALIAN WORDS & TERMINOLOGY
+  {"section":"Italian Words","q":"What does 'antipasti' mean?","a":"Before the meal — starter courses","context":"Singular: antipasto. Literally 'before pasta'"},
+  {"section":"Italian Words","q":"What does 'entrata' mean?","a":"Main course — the entry into the main part of the meal","context":"You'll see this on Italian menus instead of 'mains'"},
+  {"section":"Italian Words","q":"What does 'fritti' mean?","a":"Fried","context":"Calamari Fritti = fried calamari"},
+  {"section":"Italian Words","q":"What does 'polpette' mean?","a":"Meatballs","context":"Singular: polpetta. Usually veal, pork or beef"},
+  {"section":"Italian Words","q":"What does 'carpaccio' mean?","a":"Raw meat or fish sliced paper-thin","context":"Named after Venetian painter Vittore Carpaccio — always served raw"},
+  {"section":"Italian Words","q":"What does 'manzo' mean?","a":"Beef","context":"Carpaccio di Manzo = beef carpaccio"},
+  {"section":"Italian Words","q":"What does 'rucola' mean?","a":"Arugula (rocket) — peppery leafy green","context":"The salad is named after its main green"},
+  {"section":"Italian Words","q":"What does 'cavolo' mean?","a":"Cabbage or kale","context":"On the menu it refers to Tuscan kale (cavolo nero = black kale)"},
+  {"section":"Italian Words","q":"What does 'caprese' mean?","a":"From Capri — the island in the Bay of Naples","context":"Mozzarella Caprese was supposedly invented on Capri"},
+  {"section":"Italian Words","q":"What does 'Fra Diavolo' mean?","a":"Brother Devil — refers to the fiery spicy sauce","context":"Shrimp Fra Diavolo — warn guests it is genuinely spicy"},
+  {"section":"Italian Words","q":"What does 'salsiccia' mean?","a":"Sausage","context":"Salsiccia pizza = Italian sausage pizza"},
+  {"section":"Italian Words","q":"What does 'diavola' mean?","a":"She-devil — the spiciest pizza on the menu","context":"Named for the spicy soppressata — tell guests it has heat"},
+  {"section":"Italian Words","q":"What does 'margherita' mean?","a":"The classic pizza — named after Queen Margherita of Italy in 1889","context":"Tomato, fior di latte, basil — colours of the Italian flag"},
+  {"section":"Italian Words","q":"What does 'parmigiana' mean?","a":"In the style of Parma — with parmesan and tomato","context":"Chicken Parmigiana = breaded cutlet baked with tomato and mozzarella"},
+  {"section":"Italian Words","q":"What does 'ragu' mean?","a":"A slow-cooked meat sauce","context":"Tagliatelle Ragu = bolognese style — not a quick tomato sauce"},
+  {"section":"Italian Words","q":"What does 'limone' mean?","a":"Lemon","context":"Fettuccine Limone = lemon fettuccine — note it uses preserved lemon, not fresh"},
+  {"section":"Italian Words","q":"What does 'funghi' mean?","a":"Mushrooms","context":"Pappardelle Funghi = pappardelle with mushrooms"},
+  {"section":"Italian Words","q":"What does 'rosata' mean?","a":"Pink — referring to a pink cream-tomato sauce","context":"Fusilli rosata = pasta in a pink sauce (mix of tomato and cream)"},
+  // INGREDIENT GLOSSARY
+  {"section":"Glossary","q":"What is bufala mozzarella?","a":"Mozzarella made from water buffalo milk — creamier, richer, slightly tangy","context":"Much more flavour than regular cow's milk mozzarella. In Caprese and Parma pizza"},
+  {"section":"Glossary","q":"What is burrata?","a":"Fresh mozzarella shell filled with soft cream and stracciatella — it oozes when cut","context":"In Burrata & Prosciutto — handle gently, serve immediately"},
+  {"section":"Glossary","q":"What is fior di latte?","a":"Fresh cow's milk mozzarella — melts beautifully, mild flavour","context":"Used on most of our pizzas — different from bufala"},
+  {"section":"Glossary","q":"What is stracciatella?","a":"The creamy inner filling of burrata — shredded mozzarella in fresh cream","context":"This is what oozes out when burrata is cut"},
+  {"section":"Glossary","q":"What is prosciutto di parma?","a":"Dry-cured Italian ham from Parma, aged 12–24 months — silky and delicate","context":"Added after baking on Parma pizza so it stays tender. Not cooked like regular ham"},
+  {"section":"Glossary","q":"What is soppressata?","a":"Spicy Italian dry salami — pressed and cured, more intense than regular salami","context":"On Diavola pizza — this is what makes it spicy"},
+  {"section":"Glossary","q":"What is pancetta?","a":"Italian cured pork belly — like bacon but not smoked, more delicate","context":"In Rigatoni Vodka — crisped up before adding to the sauce"},
+  {"section":"Glossary","q":"What is porcini?","a":"A prized Italian mushroom — intensely earthy, meaty flavour, dried or fresh","context":"In Pappardelle Funghi sauce — gives deep umami"},
+  {"section":"Glossary","q":"What is truffle oil?","a":"Olive oil infused with truffle — adds earthy, aromatic luxuriousness","context":"On Mushroom & Truffle pizza and in Pappardelle Funghi"},
+  {"section":"Glossary","q":"What is fontina?","a":"Semi-firm Italian mountain cheese — nutty, buttery, melts smoothly","context":"On Mushroom & Truffle pizza. From Valle d'Aosta in the Italian Alps"},
+  {"section":"Glossary","q":"What is ricotta salata?","a":"Firm, pressed and salted ricotta — mild and slightly salty, crumbles easily","context":"In Rucola salad — NOT the soft creamy ricotta you'd use in lasagna"},
+  {"section":"Glossary","q":"What is rapini?","a":"Broccoli rabe — a bitter, leafy green with thin stalks and small florets","context":"In Orecchiette. The bitterness is intentional — balances the sausage"},
+  {"section":"Glossary","q":"What is Calabrian chilli?","a":"A fiery, slightly smoky chilli from Calabria in southern Italy — significant heat","context":"In Shrimp Fra Diavolo and Rigatoni Vodka. Always warn guests"},
+  {"section":"Glossary","q":"What is preserved lemon?","a":"Lemons cured in salt for weeks — deeply savory, almost fermented, not simply sour","context":"In Fettuccine Limone. Guests expecting 'lemon' may be surprised — it's more complex"},
+  {"section":"Glossary","q":"What is confit garlic?","a":"Garlic slow-cooked in olive oil at low heat — soft, sweet, completely mellow","context":"In Orecchiette. Very different from raw or sautéed garlic — no sharpness at all"},
+  {"section":"Glossary","q":"What is parmigiano?","a":"Parmigiano-Reggiano — hard aged Italian cow's milk cheese, salty, nutty, umami","context":"Used across the menu — different from generic 'parmesan'"},
+  {"section":"Glossary","q":"What is a demi glace?","a":"A sauce made by reducing red wine and veal stock for hours — intensely rich and glossy","context":"On Prime Striploin — a very small amount goes a long way"},
+  {"section":"Glossary","q":"What is sauce vierge?","a":"A French sauce of olive oil, tomato, basil and lemon — fresh, uncooked, bright","context":"On Grilled Branzino — think of it as a light, herbaceous vinaigrette"},
+  {"section":"Glossary","q":"What is couscous?","a":"Tiny semolina pasta pearls — fluffy, neutral, absorbs sauces well","context":"Under the Grilled Branzino — it's North African in origin but common in Italian coastal cooking"},
+  {"section":"Glossary","q":"What is dry-aged beef?","a":"Beef aged in a controlled environment for weeks — moisture evaporates, concentrating flavor and tenderizing","context":"Prime Striploin is 12oz dry-aged — this is why it's more expensive and more flavourful"},
+  {"section":"Glossary","q":"What is bolognese?","a":"A slow-cooked meat ragù from Bologna, Emilia-Romagna — typically beef or veal, tomato, wine, milk","context":"Tagliatelle Ragu is a Tuscan version of this classic sauce"},
+  {"section":"Glossary","q":"What are Bianco di Napoli tomatoes?","a":"A premium Italian canned tomato — sweeter, less acidic, brighter than regular San Marzano","context":"In Tagliatelle Ragu — the tomatoes are a specific high-quality product, worth mentioning"},
+  // PASTA SHAPES
+  {"section":"Pasta Shapes","q":"What is fettuccine?","a":"Long, flat ribbon pasta — similar to tagliatelle but slightly narrower","context":"In Fettuccine Limone — pairs well with cream-based sauces"},
+  {"section":"Pasta Shapes","q":"What is tagliatelle?","a":"Long, flat ribbon pasta from Emilia-Romagna — slightly wider than fettuccine","context":"In Tagliatelle Ragu — the traditional pasta for bolognese in Italy"},
+  {"section":"Pasta Shapes","q":"What is orecchiette?","a":"'Little ears' — small round concave pasta from Puglia, southern Italy","context":"In Orecchiette Sausage & Rapini — the shape catches the sauce perfectly"},
+  {"section":"Pasta Shapes","q":"What is rigatoni?","a":"Large ridged tubes — the ridges and hollow centre hold chunky sauces","context":"In Rigatoni Vodka — perfect for the creamy, chunky pancetta sauce"},
+  {"section":"Pasta Shapes","q":"What is pappardelle?","a":"Very wide, flat ribbon pasta — the widest pasta on the menu","context":"In Pappardelle Funghi — ideal for thick, rich sauces like truffle cream"},
+  {"section":"Pasta Shapes","q":"What is linguine?","a":"Long, flat pasta — thinner than fettuccine, slightly oval cross-section","context":"In Seafood Linguine — traditional match for seafood in Italy"},
+  {"section":"Pasta Shapes","q":"What is fusilli?","a":"Short corkscrew/spiral pasta — the spirals trap sauce in every bite","context":"In Fusilli Rosata — served with Chicken Parmigiana"},
+  // BREAD
+  {"section":"Details","q":"Is the first bread complimentary?","a":"Yes — first bread is complimentary. Additional bread is $6","context":"Note at bottom of the menu — tell guests proactively"},
+  {"section":"Details","q":"What is the pepperoni style on our Pepperoni pizza?","a":"Venetian cup-and-char — curls into cups and crisps at the edges when cooked","context":"Different from flat American pepperoni — much more flavourful"},
+  {"section":"Details","q":"How many ounces is the Prime Striploin?","a":"12oz","context":"Always mention dry-aged when describing it"},
+  {"section":"Details","q":"What does 'dry-aged' mean for the striploin?","a":"Aged in a controlled room for weeks — moisture evaporates, concentrating flavour and tenderizing the meat","context":"This is why it's more expensive and more complex than regular beef"},
+  {"section":"Details","q":"What dietary note is important for the Caesar?","a":"Contains anchovy in the dressing","context":"Always mention for guests with allergies or dietary restrictions"},
+  {"section":"Details","q":"What is branzino?","a":"European sea bass — delicate white fish, mild flavour, popular in Mediterranean cooking","context":"Grilled Branzino — fillets, not whole fish"},
+  {"section":"Details","q":"What does 'confit' mean?","a":"Slow-cooked submerged in fat (oil or butter) at low heat — results in very tender, mellow flavour","context":"Confit garlic in Orecchiette = sweet, soft, no sharpness"}
+];
+
+const WINE_CARDS = [
+  {"section":"Vintage","q":"What year is the Verdicchio — Umani Ronchi?","a":"2023","context":"Marche, Italy — $65"},
+  {"section":"Vintage","q":"What year is the Pecorino — Velenosi?","a":"2024","context":"Marche, Italy — $70"},
+  {"section":"Vintage","q":"What year is the Pinot Grigio — Giulio Straccali?","a":"2024","context":"Lombardia, Italy — $75"},
+  {"section":"Vintage","q":"What year is the Chardonnay — Roca delle Macie 'Moonlite'?","a":"2024","context":"Toscana, Italy — $80"},
+  {"section":"Vintage","q":"What year is the Langhe Rossese — Giovanni Manzone?","a":"2023","context":"Piemonte, Italy — $98"},
+  {"section":"Vintage","q":"What year is the Chardonnay — Antinori 'Bramito'?","a":"2023","context":"Umbria, Italy — $100"},
+  {"section":"Vintage","q":"What year is the Greco di Tufo — Mastroberardino?","a":"2024","context":"Campania, Italy — $105"},
+  {"section":"Vintage","q":"What year is the Etna Bianco — Planeta?","a":"2023","context":"Sicilia, Italy — $110"},
+  {"section":"Vintage","q":"What year is the Chardonnay — Pietrabianca 'Bocca di Lupo'?","a":"2024","context":"Apulia, Italy — $130"},
+  {"section":"Vintage","q":"What year is the Chablis — Madame Veuve Point?","a":"2024","context":"France — $140"},
+  {"section":"Vintage","q":"What year is the Chianti — Giulio Straccali?","a":"2024","context":"Toscana, Italy — $65"},
+  {"section":"Vintage","q":"What year is the Nero d'Avola — Vigneti Zabu?","a":"2023","context":"Sicilia, Italy — $85"},
+  {"section":"Vintage","q":"What year is the Cabernet Blend — Velenosi 'Ninfa'?","a":"2022","context":"Le Marche, Italy — $110"},
+  {"section":"Vintage","q":"What year is the Etna Rosso — Planeta?","a":"2023","context":"Sicilia, Italy — $120"},
+  {"section":"Vintage","q":"What year is the Bordeaux — Domaine les Carmels?","a":"2022","context":"France — $125"},
+  {"section":"Vintage","q":"What year is the Bolgheri — Tenuta Argentiera?","a":"2023","context":"Toscana, Italy — $135"},
+  {"section":"Vintage","q":"What year is the Montepulciano Riserva — Marina Cvetić?","a":"2020","context":"Abruzzo, Italy — $140"},
+  {"section":"Vintage","q":"What year is the Chianti Gran Selezione — Il Palazzino?","a":"2021","context":"Toscana, Italy — $150"},
+  {"section":"Vintage","q":"What year is the Barolo — Arnaldo Rivera?","a":"2020","context":"Piemonte, Italy — $175"},
+  {"section":"Vintage","q":"What year is the Brunello — Gaja 'Pieve Santa Restituta'?","a":"2020","context":"Montalcino, Toscana — $295"},
+  {"section":"Vintage","q":"What year is the Super Tuscan — Antinori 'Tignanello'?","a":"2022","context":"Toscana, Italy — $410"},
+  {"section":"Grape","q":"What grape is Verdicchio made from?","a":"Verdicchio","context":"Marche, Italy — 'little green one'"},
+  {"section":"Grape","q":"What grape is Chianti made from?","a":"Sangiovese","context":"Tuscany, Italy — all three tiers"},
+  {"section":"Grape","q":"What grape is Brunello di Montalcino made from?","a":"Sangiovese","context":"Must be 100% — aged 5+ years by law"},
+  {"section":"Grape","q":"What grape is Barolo made from?","a":"Nebbiolo","context":"Piedmont, Italy — 'king of wines'"},
+  {"section":"Grape","q":"What grape is Barbaresco made from?","a":"Nebbiolo","context":"Same grape as Barolo — neighbouring village"},
+  {"section":"Grape","q":"What grape is Etna Rosso made from?","a":"Nerello Mascalese","context":"Grown on Mt Etna's volcanic slopes"},
+  {"section":"Grape","q":"What grape is Etna Bianco made from?","a":"Carricante","context":"White grape from Mt Etna, Sicily"},
+  {"section":"Grape","q":"What grape is Chablis made from?","a":"Chardonnay","context":"Unoaked — nothing like California Chardonnay"},
+  {"section":"Grape","q":"What is Pecorino (the wine)?","a":"An ancient Italian white grape from Abruzzo","context":"Not the cheese — completely different thing"},
+  {"section":"Region","q":"What region is Greco di Tufo from?","a":"Campania, southern Italy","context":"'Tufo' = the volcanic soil it grows in"},
+  {"section":"Region","q":"What region is Verdicchio from?","a":"Marche, central Italy","context":"Umani Ronchi 'Villa Bianchi'"},
+  {"section":"Region","q":"What region is Pecorino (wine) from?","a":"Marche, central Italy","context":"Velenosi 'Villa Angela Falerio'"},
+  {"section":"Region","q":"What region is Barolo from?","a":"Piedmont, Italy","context":"Arnaldo Rivera 'Undicicomuni'"},
+  {"section":"Region","q":"What region is Barbaresco from?","a":"Piedmont, Italy","context":"Produttori del Barbaresco"},
+  {"section":"Region","q":"What region is Etna Bianco and Etna Rosso from?","a":"Mount Etna, Sicily","context":"Both made by Planeta on volcanic slopes"},
+  {"section":"Region","q":"What region is Montepulciano from?","a":"Abruzzo, central Italy","context":"Marina Cvetić — Riserva aged longer"},
+  {"section":"Region","q":"What region is Bolgheri in?","a":"Tuscany, Italy","context":"Where Super Tuscans were born"},
+  {"section":"Region","q":"What country is Chablis from?","a":"France — northern Burgundy","context":"Unoaked Chardonnay only"},
+  {"section":"Style","q":"Describe Verdicchio in one sentence.","a":"Bright citrus with a pleasantly bitter almond finish — very food-friendly.","context":"Marche, Italy — Umani Ronchi $65"},
+  {"section":"Style","q":"Describe Etna Bianco in one sentence.","a":"Dry and mineral with citrus and a distinctive ashy, volcanic finish.","context":"Unlike anything else on the list"},
+  {"section":"Style","q":"Describe Sangiovese / Chianti in one sentence.","a":"Bright tart cherry, high acid, built for food — especially tomato.","context":"Backbone of Chianti and Brunello"},
+  {"section":"Style","q":"Describe Barolo in one sentence.","a":"The king of Italian wine — tar, roses, and a very long finish.","context":"High tannin, high acid, needs food"},
+  {"section":"Style","q":"Describe Nero d'Avola in one sentence.","a":"Sicilian dark fruit with chocolate and herbs, soft and smooth.","context":"Italy's answer to Malbec"},
+  {"section":"Style","q":"What makes Tignanello special?","a":"The most famous Super Tuscan in the world — created by Antinori in 1971.","context":"Antinori 2022 — $410"},
+  {"section":"Style","q":"What's the difference between Chianti and Brunello?","a":"Same grape, Brunello is aged 5+ years and much more complex.","context":"Both 100% Sangiovese — Tuscany"},
+  {"section":"Style","q":"What's the difference between Barolo and Barbaresco?","a":"Same grape, neighbouring villages — Barolo tends to be bigger and more tannic.","context":"Both 100% Nebbiolo — Piedmont"},
+  {"section":"Style","q":"Describe Prosecco in one sentence.","a":"Light, fruity and fresh — green apple, pear and white peach with a gentle fizz.","context":"Tank method — lighter than Champagne"},
+  {"section":"Pairing","q":"What wine pairs with Prime Striploin?","a":"Barolo or Montepulciano","context":"Arnaldo Rivera $175 or Marina Cvetić $140"},
+  {"section":"Pairing","q":"What wine pairs with Seafood Linguine?","a":"Verdicchio or Etna Bianco","context":"Umani Ronchi $65 or Planeta $110"},
+  {"section":"Pairing","q":"What wine pairs with Tagliatelle Ragu?","a":"Chianti — Sangiovese loves tomato","context":"Giulio Straccali $65 is the natural match"},
+  {"section":"Pairing","q":"What wine pairs with Pappardelle Funghi?","a":"Chardonnay or Nebbiolo","context":"Roca delle Macie $80 or Barbaresco $115"},
+  {"section":"Pairing","q":"What wine pairs with Grilled Branzino?","a":"Etna Bianco or Verdicchio","context":"Planeta $110 or Umani Ronchi $65 — mineral whites"},
+  {"section":"Pairing","q":"What wine pairs with Chicken Parmigiana?","a":"Chianti or Nero d'Avola","context":"Medium reds — not too heavy"}
+];
+
+const DIAL_LABELS = {
+  Body: ["Very Light","Light","Medium","Full","Very Full"],
+  Acidity: ["Very Low","Low","Medium","High","Very High"],
+  Sweetness: ["Bone Dry","Dry","Off-Dry","Semi-Sweet","Sweet"],
+  Tannin: ["Very Soft","Soft","Medium","Firm","Very Firm"]
+};
+
+const SCREENS = ['home','menu-screen','wine-screen','foodq-screen','wineq-screen'];
+const NAV_MAP = {
+  'home':'nav-home','menu-screen':'nav-menu',
+  'wine-screen':'nav-wine','foodq-screen':'nav-foodq','wineq-screen':'nav-wineq'
+};
+
+function showScreen(id) {
+  SCREENS.forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.style.display = (s === id) ? 'block' : 'none';
+  });
+  Object.entries(NAV_MAP).forEach(([screen, btn]) => {
+    const el = document.getElementById(btn);
+    if (el) el.classList.toggle('active', screen === id);
+  });
+  try { document.documentElement.scrollTop = 0; } catch(e){}
+  try { document.body.scrollTop = 0; } catch(e){}
+}
+
+const states = {};
+
+function initDeck(id, items, sections) {
+  states[id] = { items, order: items.map((_,i)=>i), pos:0, flipped:false, section:'All', sections };
+}
+
+function filtered(id) {
+  const s = states[id];
+  return s.order.filter(i => {
+    const item = s.items[i];
+    if (s.section === 'All') return true;
+    return (item.category || item.section) === s.section;
+  });
+}
+
+function flip(id) {
+  states[id].flipped = !states[id].flipped;
+  const cardInner = document.getElementById(id+'-card');
+  cardInner.classList.toggle('flipped', states[id].flipped);
+  const btn = document.getElementById(id+'-flip');
+  if (btn) btn.textContent = states[id].flipped ? 'Hide' : 'Flip';
+  srShowButtons(id, states[id].flipped);
+  setTimeout(function() {
+    const front = document.getElementById(id+'-front');
+    const back  = document.getElementById(id+'-back');
+    if (!front || !back || !cardInner) return;
+    if (states[id].flipped) {
+      cardInner.style.height = back.scrollHeight + 'px';
+      setTimeout(function() {
+        const srRow = document.getElementById(id+'-sr-row');
+        if (srRow) {
+          const rect = srRow.getBoundingClientRect();
+          const scrollTarget = window.scrollY + rect.bottom - window.innerHeight + 80;
+          window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+        }
+      }, 60);
+    } else {
+      cardInner.style.height = front.scrollHeight + 'px';
+      cardInner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 520);
+}
+
+function next(id) {
+  const l = filtered(id);
+  states[id].flipped = false;
+  states[id].pos = (states[id].pos + 1) % l.length;
+  const cardInner = document.getElementById(id+'-card');
+  cardInner.classList.remove('flipped');
+  cardInner.style.height = '';
+  const btn = document.getElementById(id+'-flip');
+  if (btn) btn.textContent = 'Flip';
+  srShowButtons(id, false);
+  render(id);
+}
+
+function prev(id) {
+  const l = filtered(id);
+  states[id].flipped = false;
+  states[id].pos = (states[id].pos - 1 + l.length) % l.length;
+  const cardInner = document.getElementById(id+'-card');
+  cardInner.classList.remove('flipped');
+  cardInner.style.height = '';
+  const btn = document.getElementById(id+'-flip');
+  if (btn) btn.textContent = 'Flip';
+  srShowButtons(id, false);
+  render(id);
+}
+
+function shuffle(id) {
+  const a = [...states[id].order];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  states[id].order = a; states[id].pos = 0; states[id].flipped = false;
+  document.getElementById(id+'-card').classList.remove('flipped');
+  const btn = document.getElementById(id+'-flip');
+  if (btn) btn.textContent = 'Flip';
+  render(id);
+}
+
+function reset(id) {
+  states[id].order = states[id].items.map((_,i)=>i);
+  states[id].pos = 0; states[id].flipped = false; states[id].section = 'All';
+  document.getElementById(id+'-card').classList.remove('flipped');
+  const btn = document.getElementById(id+'-flip');
+  if (btn) btn.textContent = 'Flip';
+  buildCats(id); render(id);
+}
+
+function buildCats(id) {
+  const s = states[id];
+  const el = document.getElementById(id+'-cats');
+  if (!el) return;
+  el.innerHTML = '';
+  ['All', ...s.sections].forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (s.section === c ? ' active' : '');
+    btn.textContent = c;
+    btn.onclick = () => {
+      s.section = c; s.pos = 0; s.flipped = false;
+      document.getElementById(id+'-card').classList.remove('flipped');
+      const fb = document.getElementById(id+'-flip');
+      if (fb) fb.textContent = 'Flip';
+      buildCats(id); render(id);
+    };
+    el.appendChild(btn);
+  });
+}
+
+function render(id) {
+  if (id === 'menu') renderMenu();
+  else if (id === 'wine') renderWine();
+  else if (id === 'foodq') renderQuiz('foodq', FOOD_CARDS);
+  else if (id === 'wineq') renderQuiz('wineq', WINE_CARDS);
+  srInjectBadge(id);
+}
+
+function renderMenu() {
+  const id = 'menu'; const s = states[id];
+  const list = filtered(id);
+  if (!list.length) return;
+  if (s.pos >= list.length) s.pos = 0;
+  const d = DISHES[list[s.pos]];
+  document.getElementById('menu-prog').textContent = (s.pos+1) + ' / ' + list.length;
+  document.getElementById('menu-front').innerHTML = `
+    <div class="front-cat">${d.category}</div>
+    <div class="front-name">${d.name}</div>
+    <div class="front-price">$${d.price}</div>
+    <div class="tap-hint">Tap to reveal · <span style="opacity:0.6">Space to flip · → next · ← prev</span></div>`;
+  const pitch = d.pitch.map((p,i) => `
+    <div class="pitch-item">
+      <span class="pitch-num">0${i+1}</span>
+      <span class="pitch-word">${p}</span>
+    </div>`).join('');
+  const bottles = d.bottles.map(b => '• ' + b).join('<br>');
+  document.getElementById('menu-back').innerHTML = `
+    <div class="section-tag">Say these three</div>
+    <div class="back-name">${d.name}</div>
+    <div class="pitch-list">${pitch}</div>
+    <div class="back-divider"></div>
+    <div class="info-block">
+      <div class="info-label">Full ingredients</div>
+      <div class="info-text italic">${d.full}</div>
+    </div>
+    <div class="mise-line">🍽 ${d.mise}</div>
+    <div class="info-block">
+      <div class="info-label">Wine pairing</div>
+      <div class="info-text">${bottles}</div>
+    </div>
+    <div class="info-block">
+      <div class="info-label">Say to guest</div>
+      <div class="info-text italic">${d.wine}</div>
+    </div>
+    <div class="note-line">※ ${d.note}</div>`;
+}
+
+function dots(val, key) {
+  let h = '<div class="dial-dots">';
+  for (let i = 0; i < 5; i++) h += `<span class="ddot${i < val ? ' on' : ''}"></span>`;
+  h += '</div>';
+  return h;
+}
+
+function renderWine() {
+  const id = 'wine'; const s = states[id];
+  const list = filtered(id);
+  if (!list.length) return;
+  if (s.pos >= list.length) s.pos = 0;
+  const w = WINES[list[s.pos]];
+  document.getElementById('wine-prog').textContent = (s.pos+1) + ' / ' + list.length;
+  document.getElementById('wine-front').innerHTML = `
+    <div class="front-cat">${w.category}</div>
+    <div class="front-name">${w.name}</div>
+    ${w.pronunciation ? `<div class="front-pronunciation">${w.pronunciation}</div>` : ''}
+    <div class="tap-hint" style="color:var(--wine-line)">Tap to reveal · <span style="opacity:0.6">Space flip · → next · ← prev</span></div>`;
+  const flavors = w.flavors.map(f => `<div class="flavor-item">${f}</div>`).join('');
+  const dials = Object.entries(w.dials).map(([k,v]) => `
+    <div class="dial-row">
+      <span class="dial-lbl">${k}</span>
+      ${dots(v, k)}
+      <span class="dial-val">${DIAL_LABELS[k][v-1] || ''}</span>
+    </div>`).join('');
+  const bottles = w.on_list.map(b => `${b.bottle} · ${b.region} ${b.year} · ${b.price}`).join('<br>');
+  document.getElementById('wine-back').innerHTML = `
+    <div class="section-tag">Flavor Profile</div>
+    <div class="back-name">${w.name}</div>
+    <div class="wine-flavors">${flavors}</div>
+    <div class="back-divider"></div>
+    ${dials}
+    <div class="back-divider"></div>
+    <div class="info-block">
+      <div class="info-label">On our list</div>
+      <div class="info-text">${bottles}</div>
+    </div>
+    <div class="info-block">
+      <div class="info-label">Say to guest</div>
+      <div class="info-text italic">${w.guest_line}</div>
+    </div>
+    <div class="note-line">※ ${w.note}</div>`;
+}
+
+const ITALIAN_GLOSSARY = {
+  // Cheeses
+  'bufala mozzarella': { say: 'BOO-fah-lah mot-sah-REL-ah', en: 'mozzarella from water buffalo milk — creamier than cow\'s milk' },
+  'fior di latte': { say: 'FYOR dee LAT-teh', en: 'fresh cow\'s milk mozzarella — melts beautifully on pizza' },
+  'ricotta salata': { say: 'ree-KOT-ah sah-LAH-tah', en: 'firm salted ricotta — crumbles, mild and salty' },
+  'stracciatella': { say: 'strah-chah-TEL-ah', en: 'shredded mozzarella in cream — the inside of burrata' },
+  'bufala': { say: 'BOO-fah-lah', en: 'water buffalo milk — much richer than cow\'s milk' },
+  'burrata': { say: 'boo-RAH-tah', en: 'mozzarella shell filled with soft cream — oozes when cut' },
+  'mozzarella': { say: 'mot-sah-REL-ah', en: 'fresh Italian stretched-curd cheese — mild and milky' },
+  'ricotta': { say: 'ree-KOT-ah', en: 'soft Italian whey cheese — light and creamy in its fresh form' },
+  'parmigiano': { say: 'par-mee-JAH-noh', en: 'Parmigiano-Reggiano — hard aged Italian cheese, salty and nutty' },
+  'parmigiana': { say: 'par-mee-JAH-nah', en: 'in the style of Parma — baked with parmesan and tomato' },
+  'fontina': { say: 'fon-TEE-nah', en: 'semi-firm Italian mountain cheese — nutty and buttery, melts well' },
+  'parmesan': { say: 'PAR-meh-zan', en: 'English name for Parmigiano-Reggiano — hard, aged, salty' },
+  // Meats & Charcuterie
+  'prosciutto di parma': { say: 'pro-SHOO-toh dee PAR-mah', en: 'dry-cured Italian ham from Parma, aged 12–24 months' },
+  'prosciutto': { say: 'pro-SHOO-toh', en: 'dry-cured Italian ham — silky, not cooked like regular ham' },
+  'soppressata': { say: 'soh-preh-SAH-tah', en: 'spicy pressed Italian dry salami' },
+  'pancetta': { say: 'pan-CHET-ah', en: 'Italian cured pork belly — like unsmoked bacon' },
+  'salami': { say: 'sah-LAH-mee', en: 'cured Italian sausage, dried and sliced' },
+  'veal': { say: 'VEEL', en: 'meat from a young calf — delicate, mild, tender' },
+  'salsiccia': { say: 'sal-SEE-chah', en: 'Italian sausage' },
+  'polpette': { say: 'pol-PET-teh', en: 'meatballs' },
+  // Mushrooms & Truffles
+  'porcini': { say: 'por-CHEE-nee', en: 'prized Italian mushroom — intensely earthy and meaty' },
+  'truffle oil': { say: 'TRUF-ul oyl', en: 'olive oil infused with truffle — earthy and aromatic' },
+  'truffle': { say: 'TRUF-ul', en: 'prized underground fungus — intensely earthy, luxurious' },
+  // Pasta shapes
+  'fusilli rosata': { say: 'foo-ZEEL-ee roh-ZAH-tah', en: 'corkscrew pasta in a pink cream-tomato sauce' },
+  'fettuccine': { say: 'fet-oo-CHEE-neh', en: 'long flat ribbon pasta' },
+  'tagliatelle': { say: 'tah-lyah-TEL-eh', en: 'long flat ribbon pasta — wider than fettuccine' },
+  'orecchiette': { say: 'oh-reh-KYET-teh', en: 'little ears pasta from Puglia — cups hold sauce perfectly' },
+  'rigatoni': { say: 'ree-gah-TOH-nee', en: 'large ridged tubes — ridges and hollow centre hold chunky sauces' },
+  'pappardelle': { say: 'pah-par-DEL-eh', en: 'very wide flat ribbon pasta — pairs with thick rich sauces' },
+  'linguine': { say: 'lin-GWEE-neh', en: 'long flat pasta — slightly oval, traditional with seafood' },
+  'fusilli': { say: 'foo-ZEEL-ee', en: 'corkscrew/spiral pasta — spirals trap sauce in every bite' },
+  // Sauces & Techniques
+  'bolognese': { say: 'boh-loh-NYEH-zeh', en: 'slow-cooked meat sauce from Bologna' },
+  'rosata': { say: 'roh-ZAH-tah', en: 'pink sauce — blend of tomato and cream' },
+  'ragu': { say: 'rah-GOO', en: 'slow-cooked meat sauce' },
+  'vodka rose sauce': { say: 'VOD-kah rohz soss', en: 'tomato cream sauce with a splash of vodka — vodka amplifies the tomato' },
+  'demi glace': { say: 'DEH-mee glass', en: 'intensely reduced red wine and veal stock sauce — very rich' },
+  'sauce vierge': { say: 'soss VYERZH', en: 'French uncooked sauce — olive oil, tomato, basil, lemon' },
+  'aioli': { say: 'ay-OH-lee', en: 'garlic mayonnaise — rich, creamy dipping sauce' },
+  'confit garlic': { say: 'kon-FEE gar-lik', en: 'garlic slow-cooked in oil — sweet, soft, no sharpness' },
+  'confit': { say: 'kon-FEE', en: 'slow-cooked submerged in fat at low heat — very tender and mellow' },
+  // Vegetables & Greens
+  'rapini': { say: 'rah-PEE-nee', en: 'broccoli rabe — bitter leafy Italian green' },
+  'rucola': { say: 'ROO-koh-lah', en: 'arugula — peppery leafy green' },
+  'cavolo': { say: 'KAH-voh-loh', en: 'kale or cabbage — here: Tuscan/lacinato kale' },
+  'arugula': { say: 'ah-ROO-gyoo-lah', en: 'peppery leafy green — also called rocket or rucola' },
+  'leeks': { say: 'LEEKS', en: 'mild sweet allium — related to onion and garlic, much more delicate' },
+  'calabrian chilli': { say: 'kah-LAH-bree-an CHIL-ee', en: 'fiery smoky chilli from Calabria, southern Italy — significant heat' },
+  'calabrian chili': { say: 'kah-LAH-bree-an CHIL-ee', en: 'fiery smoky chilli from Calabria, southern Italy — significant heat' },
+  'preserved lemon': { say: 'preh-ZURVD', en: 'lemons cured in salt for weeks — deeply savoury, not just sour' },
+  'caramelized onion': { say: 'kah-RAM-el-ized', en: 'onions cooked slowly until sweet and golden — very different from raw' },
+  // Proteins & Fish
+  'branzino': { say: 'bran-ZEE-noh', en: 'European sea bass — delicate white fish, mild flavour' },
+  'carpaccio': { say: 'kar-PAH-choh', en: 'raw meat or fish sliced paper-thin — served cold' },
+  'couscous': { say: 'KOOS-koos', en: 'tiny semolina pasta pearls — fluffy, neutral, absorbs sauces' },
+  // Grains, Tomatoes, Misc
+  'bianco di napoli tomatoes': { say: 'BYAHN-koh dee NAH-poh-lee', en: 'premium Italian canned tomatoes — sweeter and less acidic' },
+  'bianco di napoli': { say: 'BYAHN-koh dee NAH-poh-lee', en: 'premium Italian canned tomatoes — sweeter and less acidic' },
+  'balsamic': { say: 'bal-SAM-ik', en: 'aged Italian vinegar from Modena — sweet, syrupy, complex' },
+  'aged balsamic': { say: 'bal-SAM-ik', en: 'vinegar aged in barrels for years — much richer and sweeter than regular balsamic' },
+  'pine nuts': { say: 'PYN nutz', en: 'small seeds from pine cones — buttery and slightly sweet, toasted for salads' },
+  'crostini': { say: 'kros-TEE-nee', en: 'small grilled or toasted bread slices' },
+  // Course names & Menu words
+  'antipasti': { say: 'an-tee-PAH-stee', en: 'before the meal — Italian starter courses' },
+  'antipasto': { say: 'an-tee-PAH-stoh', en: 'singular of antipasti — one starter' },
+  'entrata': { say: 'en-TRAH-tah', en: 'main course — literally the entry into the main meal' },
+  'fritti': { say: 'FREET-tee', en: 'fried' },
+  'polpette': { say: 'pol-PET-teh', en: 'meatballs' },
+  // Dish names
+  'caprese': { say: 'kah-PREH-zeh', en: 'from Capri — the island in the Bay of Naples' },
+  'fra diavolo': { say: 'frah DYAH-voh-loh', en: 'brother devil — the spicy tomato sauce' },
+  'diavola': { say: 'DYAH-voh-lah', en: 'she-devil — means it is the spiciest pizza' },
+  'margherita': { say: 'mar-geh-REE-tah', en: 'named after Queen Margherita of Italy in 1889' },
+  'parma': { say: 'PAR-mah', en: 'from Parma — northern Italian city famous for its ham and cheese' },
+  'salsiccia': { say: 'sal-SEE-chah', en: 'Italian sausage' },
+  'limone': { say: 'lee-MOH-neh', en: 'lemon' },
+  'funghi': { say: 'FOON-ghee', en: 'mushrooms' },
+  'manzo': { say: 'MAN-tsoh', en: 'beef' },
+};
+
+function getItalianTranslations(text) {
+  const lower = text.toLowerCase();
+  const found = [];
+  const sorted = Object.keys(ITALIAN_GLOSSARY).sort((a,b) => b.length - a.length);
+  const matched = new Set();
+  for (const term of sorted) {
+    if (lower.includes(term)) {
+      let alreadyCovered = false;
+      for (const m of matched) { if (m.includes(term)) { alreadyCovered = true; break; } }
+      if (!alreadyCovered) {
+        matched.add(term);
+        const g = ITALIAN_GLOSSARY[term];
+        found.push(`<span style="font-weight:600">${term}</span> <span style="font-style:italic;opacity:0.55">${g.say}</span> — ${g.en}`);
+      }
+    }
+  }
+  return found;
+}
+
+function renderQuiz(id, data) {
+  const s = states[id];
+  const list = filtered(id);
+  if (!list.length) return;
+  if (s.pos >= list.length) s.pos = 0;
+  const c = data[list[s.pos]];
+  document.getElementById(id+'-prog').textContent = (s.pos+1) + ' / ' + list.length;
+  document.getElementById(id+'-front').innerHTML = `
+    <div class="front-cat">${c.section}</div>
+    <div class="quiz-q">${c.q}</div>
+    ${c.context ? `<div class="quiz-context">${c.context}</div>` : ''}
+    <div class="tap-hint" style="margin-top:auto">Tap to reveal · <span style="opacity:0.6">Space flip · A wrong · S unsure · D correct</span></div>`;
+  const translations = getItalianTranslations((c.a + ' ' + (c.context||'')).toLowerCase());
+  const translationBlock = translations.length
+    ? `<div class="back-divider"></div><div class="info-label" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Italian</div><div style="font-size:12px;color:var(--ink-soft);line-height:1.8">${translations.join('<br>')}</div>`
+    : '';
+  document.getElementById(id+'-back').innerHTML = `
+    <div class="section-tag">Answer</div>
+    <div class="quiz-a">${c.a}</div>
+    ${c.context ? `<div class="quiz-context-back">${c.context}</div>` : ''}
+    ${translationBlock}`;
+}
+
+const srWeights = {};
+const srSkipNext = {};
+
+function srInit(id, count) {
+  srWeights[id] = new Array(count).fill(1);
+  srSkipNext[id] = new Set();
+}
+
+function srMark(id, result) {
+  const s = states[id];
+  const list = filtered(id);
+  if (!list.length) return;
+  const itemIdx = list[s.pos];
+  if (result === 'wrong') {
+    srWeights[id][itemIdx] = 3;
+    srSkipNext[id].delete(itemIdx);
+  } else if (result === 'unsure') {
+    srWeights[id][itemIdx] = 2;
+    srSkipNext[id].delete(itemIdx);
+  } else {
+    srSkipNext[id].add(itemIdx);
+    srWeights[id][itemIdx] = 1;
+  }
+  srUpdateProgress(id);
+  srNext(id);
+}
+
+function srFiltered(id) {
+  const s = states[id];
+  const base = s.items.map((_,i) => i).filter(i => {
+    const item = s.items[i];
+    if (s.section !== 'All' && (item.category || item.section) !== s.section) return false;
+    if (srSkipNext[id] && srSkipNext[id].has(i)) return false;
+    return true;
+  });
+  const weighted = [];
+  base.forEach(i => {
+    const w = (srWeights[id] && srWeights[id][i]) || 1;
+    for (let x = 0; x < w; x++) weighted.push(i);
+  });
+  return weighted.length ? weighted : base;
+}
+
+function srNext(id) {
+  const list = srFiltered(id);
+  const s = states[id];
+  const cardInner = document.getElementById(id+'-card');
+  const btn = document.getElementById(id+'-flip');
+  srShowButtons(id, false);
+  s.flipped = false;
+  cardInner.classList.remove('flipped');
+  cardInner.style.height = '';
+  if (btn) btn.textContent = 'Flip';
+  setTimeout(function() {
+    const pickedItemIdx = list[Math.floor(Math.random() * list.length)];
+    const regularList = filtered(id);
+    const posInRegular = regularList.indexOf(pickedItemIdx);
+    s.pos = posInRegular >= 0 ? posInRegular : 0;
+    render(id);
+  }, 520);
+}
+
+function srShowButtons(id, show) {
+  ['wrong','unsure','right'].forEach(k => {
+    const b = document.getElementById(id+'-sr-'+k);
+    if (b) b.style.display = show ? 'block' : 'none';
+  });
+}
+
+function srUpdateProgress(id) {
+  const weights = srWeights[id];
+  if (!weights) return;
+  const total = weights.length;
+  const mastered = [...srSkipNext[id]].length;
+  const pct = total > 0 ? Math.round(mastered / total * 100) : 0;
+  const bar = document.getElementById(id+'-sr-bar');
+  const stats = document.getElementById(id+'-sr-stats');
+  if (bar) bar.style.width = pct + '%';
+  if (stats && total > 0) {
+    const wrong = weights.filter(w => w === 3).length;
+    const unsure = weights.filter(w => w === 2).length;
+    stats.innerHTML =
+      (mastered ? `<span style="color:#27ae60">✓ ${mastered}</span> &nbsp;` : '') +
+      (unsure   ? `<span style="color:#e67e22">~ ${unsure}</span> &nbsp;` : '') +
+      (wrong    ? `<span style="color:#c0392b">✗ ${wrong}</span> &nbsp;` : '') +
+      `<span style="opacity:0.5">${total} cards</span>`;
+  }
+}
+
+function srGetBadge(id, itemIdx) {
+  if (!srWeights[id]) return '';
+  if (srSkipNext[id] && srSkipNext[id].has(itemIdx)) return '<span class="sr-badge right">✓ Mastered</span>';
+  const w = srWeights[id][itemIdx];
+  if (w === 3) return '<span class="sr-badge wrong">✗ Repeat</span>';
+  if (w === 2) return '<span class="sr-badge unsure">~ Unsure</span>';
+  return '';
+}
+
+function srInjectBadge(id) {
+  const s = states[id];
+  const list = filtered(id);
+  if (!list.length) return;
+  if (s.pos >= list.length) return;
+  const itemIdx = list[s.pos];
+  const badge = srGetBadge(id, itemIdx);
+  if (!badge) return;
+  const front = document.getElementById(id+'-front');
+  if (!front) return;
+  if (!front.querySelector('.sr-badge')) front.innerHTML += badge;
+}
+
+initDeck('menu', DISHES, ['Antipasti','Salad','Pizza','Pasta','Entrata']);
+initDeck('wine', WINES, ['White Grapes','Red Grapes','Sparkling & Rosé']);
+initDeck('foodq', FOOD_CARDS, ['Ingredients','Pitch','Pairing','Italian Words','Glossary','Pasta Shapes','Details']);
+initDeck('wineq', WINE_CARDS, ['Vintage','Grape','Region','Style','Pairing']);
+srInit('menu', DISHES.length);
+srInit('wine', WINES.length);
+srInit('foodq', FOOD_CARDS.length);
+srInit('wineq', WINE_CARDS.length);
+renderMenu(); renderWine();
+renderQuiz('foodq', FOOD_CARDS);
+renderQuiz('wineq', WINE_CARDS);
+buildCats('menu'); buildCats('wine');
+buildCats('foodq'); buildCats('wineq');
+srUpdateProgress('menu'); srUpdateProgress('wine');
+srUpdateProgress('foodq'); srUpdateProgress('wineq');
+
+// WASD keyboard shortcuts
+function activeScreen() {
+  return SCREENS.find(s => {
+    const el = document.getElementById(s);
+    return el && el.style.display !== 'none';
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const key = e.key.toLowerCase();
+  const screen = activeScreen();
+  const id = screen === 'home' ? null :
+    screen === 'menu-screen' ? 'menu' :
+    screen === 'wine-screen' ? 'wine' :
+    screen === 'foodq-screen' ? 'foodq' :
+    screen === 'wineq-screen' ? 'wineq' : null;
+  if (!id) return;
+  const flipped = states[id] && states[id].flipped;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || key === ' ') e.preventDefault();
+  if (e.key === 'ArrowRight') { next(id); }
+  else if (e.key === 'ArrowLeft' && !flipped) { prev(id); }
+  else if (key === ' ' || key === 'f') { e.preventDefault(); flip(id); }
+  else if (flipped) {
+    if (key === 'd') srMark(id, 'right');
+    else if (key === 's') srMark(id, 'unsure');
+    else if (key === 'a') srMark(id, 'wrong');
+  }
+});
+</script>
+</body>
+</html>
