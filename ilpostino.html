@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Il Postino — Service Prep</title>
+<title>Il Postino — Service Prep + Drinks</title>
 <style>
 :root {
   --bg: #ede5d8;
@@ -255,19 +255,19 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
   background: rgba(237,229,216,0.97);
   backdrop-filter: blur(8px);
   border-top: 1px solid var(--line);
-  display: flex; justify-content: space-around;
+  display: grid; grid-template-columns: repeat(6, 1fr);
   padding: 8px 0 max(8px, env(safe-area-inset-bottom));
   z-index: 100;
 }
 .nav-item {
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  cursor: pointer; padding: 4px 10px;
+  cursor: pointer; padding: 4px 2px;
   border-radius: 10px; transition: background 0.12s;
   border: none; background: none;
 }
 .nav-item:active { background: rgba(0,0,0,0.04); }
-.nav-item .ni { font-size: 20px; }
-.nav-item .nl { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.nav-item .ni { font-size: 18px; }
+.nav-item .nl { font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
 .nav-item.active .nl { color: var(--acc); font-weight: 600; }
 </style>
 </head>
@@ -279,7 +279,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
     <div class="home-restaurant">Il Postino</div>
     <h1 class="home-title">Service<br><em>Prep</em></h1>
     <div class="home-div"></div>
-    <p class="home-sub">Your complete shift study guide</p>
+    <p class="home-sub">Your complete shift study guide — food, wine, cocktails & mocktails</p>
 
     <div class="section-label">Reference — Full Detail</div>
     <div class="card-list">
@@ -295,9 +295,18 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
       <div class="h-card wine-card" onclick="showScreen('wine-screen')">
         <div class="h-icon">🍷</div>
         <div class="h-body">
-          <div class="h-top"><div class="h-name">Wine Cards</div><div class="h-count">24 wines</div></div>
-          <div class="h-desc">Flavor profiles, dials, every bottle with vintage year and exact region.</div>
+          <div class="h-top"><div class="h-name">Wine Cards</div><div class="h-count">33 wines</div></div>
+          <div class="h-desc">Flavor profiles, dials, every bottle with vintage year and exact region, including added bottles from the current drink menu.</div>
           <div class="h-tags"><span class="h-tag">White Grapes</span><span class="h-tag">Red Grapes</span><span class="h-tag">Sparkling</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
+      <div class="h-card" onclick="showScreen('cocktail-screen')">
+        <div class="h-icon">🍸</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">Cocktail Cards</div><div class="h-count">8 drinks</div></div>
+          <div class="h-desc">Classic specs, method, glassware, garnish, and guest-friendly talking points.</div>
+          <div class="h-tags"><span class="h-tag">Cocktails</span><span class="h-tag">Mocktails</span><span class="h-tag">Beer</span></div>
         </div>
         <div class="h-arrow">›</div>
       </div>
@@ -311,6 +320,15 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
           <div class="h-top"><div class="h-name">Food Quiz</div><div class="h-count">130+ cards</div></div>
           <div class="h-desc">Ingredients, pitch trios, pairings, Italian words, glossary, pasta shapes.</div>
           <div class="h-tags"><span class="h-tag">Ingredients</span><span class="h-tag">Pitch</span><span class="h-tag">Pairing</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
+      <div class="h-card" onclick="showScreen('drinkq-screen')">
+        <div class="h-icon">🥃</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">Drinks Quiz</div><div class="h-count">40+ cards</div></div>
+          <div class="h-desc">Specs, spirit base, glassware, garnishes, and non-alcoholic menu knowledge.</div>
+          <div class="h-tags"><span class="h-tag">Specs</span><span class="h-tag">Glassware</span><span class="h-tag">Pitch</span></div>
         </div>
         <div class="h-arrow">›</div>
       </div>
@@ -471,6 +489,78 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
   </div>
 </div>
 
+<!-- COCKTAIL SCREEN -->
+<div id="cocktail-screen" class="screen deck-screen">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Service Prep</div>
+    <div class="deck-title">Cocktail Cards</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="cocktail-cats"></div>
+    <div class="progress" id="cocktail-prog"></div>
+    <div class="sr-stats" id="cocktail-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="cocktail-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('cocktail')">
+      <div class="card-inner" id="cocktail-card">
+        <div class="card-face card-front" id="cocktail-front"></div>
+        <div class="card-face card-back" id="cocktail-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('cocktail')">←</button>
+        <button class="nav-btn primary" id="cocktail-flip" onclick="flip('cocktail')">Flip</button>
+        <button class="nav-btn" onclick="next('cocktail')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('cocktail')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('cocktail')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="cocktail-sr-row">
+        <button class="sr-btn sr-wrong" id="cocktail-sr-wrong" onclick="srMark('cocktail','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="cocktail-sr-unsure" onclick="srMark('cocktail','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right" id="cocktail-sr-right" onclick="srMark('cocktail','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DRINK QUIZ SCREEN -->
+<div id="drinkq-screen" class="screen deck-screen">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Quick Quiz</div>
+    <div class="deck-title">Drinks Quiz</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="drinkq-cats"></div>
+    <div class="progress" id="drinkq-prog"></div>
+    <div class="sr-stats" id="drinkq-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="drinkq-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('drinkq')">
+      <div class="card-inner" id="drinkq-card">
+        <div class="card-face card-front" id="drinkq-front"></div>
+        <div class="card-face card-back" id="drinkq-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('drinkq')">←</button>
+        <button class="nav-btn primary" id="drinkq-flip" onclick="flip('drinkq')">Flip</button>
+        <button class="nav-btn" onclick="next('drinkq')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('drinkq')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('drinkq')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="drinkq-sr-row">
+        <button class="sr-btn sr-wrong" id="drinkq-sr-wrong" onclick="srMark('drinkq','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="drinkq-sr-unsure" onclick="srMark('drinkq','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right" id="drinkq-sr-right" onclick="srMark('drinkq','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
@@ -517,6 +607,61 @@ const DISHES = [
   {"name":"Prime Striploin","price":68,"category":"Entrata","pitch":["12oz dry aged prime striploin","red wine demi glace","grilled vegetables"],"full":"12oz dry aged prime striploin, grilled vegetables, roasted potatoes, red wine demi glace","mise":"Fork + Steak Knife","wine":"Bold structured red","bottles":["Barolo — Arnaldo Rivera $175","Bordeaux — Domaine les Carmels $125","Montepulciano — Marina Cvetić $140"],"note":"12oz dry-aged — mention this detail when describing. Demi glace = intensely reduced red wine sauce"},
   {"name":"Grilled Branzino","price":42,"category":"Entrata","pitch":["grilled sea bass","couscous","sauce vierge"],"full":"grilled sea bass fillets, couscous, sauce vierge, charred lemon","mise":"Fork + Butter Knife","wine":"Mineral white — classic fish pairing","bottles":["Etna Bianco — Planeta $110","Verdicchio — Umani Ronchi $65","Chablis — Madame Veuve Point $140"],"note":"Branzino = European sea bass. Sauce vierge = French vinaigrette with tomato, basil, lemon — fresh and bright"},
   {"name":"Chicken Parmigiana","price":45,"category":"Entrata","pitch":["chicken cutlet","tomato & mozzarella","fusilli rosata"],"full":"chicken cutlet baked with tomato & mozzarella, served with fusilli rosata","mise":"Fork + Steak Knife","wine":"Medium Italian red","bottles":["Chianti — Giulio Straccali $65","Chianti Classico — Badia a Coltibuono $98","Nero d'Avola — Vigneti Zabu $85"],"note":"Fusilli rosata = pasta in a pink cream-tomato sauce. One of Italy's most beloved comfort dishes"}
+];
+
+const COCKTAILS = [
+  {"name":"Negroni","price":16,"category":"Cocktail","pitch":["gin","campari","sweet vermouth"],"full":"1 oz gin, 1 oz Campari, 1 oz sweet vermouth","mise":"Rocks glass, large cube, orange peel","wine":"Bitter, boozy, stirred aperitivo","bottles":["Method — stir with ice and strain over fresh ice","Glassware — rocks glass","Garnish — expressed orange peel"],"note":"Classic equal-parts Italian aperitivo. Guest line: bitter, spirit-forward, orange-peel aromatic"},
+  {"name":"Sbagliato","price":17,"category":"Cocktail","pitch":["campari","sweet vermouth","prosecco"],"full":"1 oz Campari, 1 oz sweet vermouth, top with 3 oz Prosecco","mise":"Wine glass, ice, orange slice","wine":"Sparkling bitter aperitivo","bottles":["Method — build over ice, top with Prosecco","Glassware — wine glass","Garnish — orange slice"],"note":"Negroni sbagliato = 'mistaken' Negroni where sparkling wine replaces gin. Lighter and more sessionable"},
+  {"name":"Hugo Spritz","price":18,"category":"Cocktail","pitch":["st germain","prosecco","mint"],"full":"1 oz St-Germain, 3 oz Prosecco, 1 oz soda, mint","mise":"Wine glass, ice, mint, lemon wheel","wine":"Floral, bright, easy-drinking spritz","bottles":["Method — build over ice and give a gentle stir","Glassware — large wine glass","Garnish — mint sprig and lemon wheel"],"note":"Elderflower-driven spritz from northern Italy. Fresh, aromatic and lower-proof feeling"},
+  {"name":"Aperol Sour","price":19,"category":"Cocktail","pitch":["aperol","lemon","egg white"],"full":"2 oz Aperol, 1 oz lemon juice, 0.75 oz simple syrup, 1 egg white","mise":"Coupe, no ice, lemon twist","wine":"Silky, citrusy, lightly bitter sour","bottles":["Method — dry shake, shake with ice, double strain","Glassware — coupe","Garnish — lemon twist or expressed orange peel"],"note":"Aperol keeps this softer and more approachable than a whiskey sour. Egg white gives the frothy texture"},
+  {"name":"Peach Iced Tea","price":10,"category":"Mocktail","pitch":["black tea","peach","lemon"],"full":"Fresh black tea with peach syrup and lemon","mise":"Tall glass, ice, lemon wheel","wine":"Refreshing house iced tea","bottles":["Method — build over ice and stir","Glassware — Collins/highball","Garnish — lemon wheel"],"note":"Use as a non-alcoholic pitch: refreshing, fruity, lightly tannic and easy"},
+  {"name":"Passionfruit Hibiscus Lemonade","price":10,"category":"Mocktail","pitch":["passionfruit","hibiscus","lemonade"],"full":"Passionfruit puree or syrup, hibiscus tea, lemonade","mise":"Tall glass, ice, lemon wheel","wine":"Tart, floral, tropical refresher","bottles":["Method — shake or build over ice","Glassware — Collins/highball","Garnish — lemon wheel or mint"],"note":"Best mocktail pitch: bright, floral and tangy with tropical fruit notes"},
+  {"name":"Peroni 0.0","price":8,"category":"Beer / NA","pitch":["lager style","italian","zero alcohol"],"full":"Non-alcoholic Italian lager","mise":"Bottle or pilsner glass","wine":"Crisp alcohol-free beer option","bottles":["Style — light lager","Serve — chilled bottle or poured into beer glass","Origin — Italy"],"note":"Great beer-like option for guests avoiding alcohol but wanting something crisp and familiar"},
+  {"name":"Rouge River IPA / Pilsner","price":14,"category":"Beer","pitch":["local draft","ipa or pilsner","markham"],"full":"Rouge River draft selections: IPA and Pilsner","mise":"16 oz draft pint","wine":"Local draft beer options","bottles":["IPA — hoppier and more bitter","Pilsner — lighter, crisper and more refreshing","Origin — Markham"],"note":"Use this card to remember both draft beer options and how to steer guests"}
+];
+
+const DRINK_QUIZ = [
+  {section:"Specs",q:"What are the classic equal parts in a Negroni?",a:"Gin, Campari, and sweet vermouth.",note:"Classic stirred aperitivo."},
+  {section:"Glassware",q:"What glassware should you use for a classic Negroni?",a:"A rocks glass over fresh ice.",note:"Usually finished with an orange peel."},
+  {section:"Garnish",q:"What garnish goes on a Negroni?",a:"An expressed orange peel.",note:"Citrus oils matter."},
+  {section:"Style",q:"How do you describe a Negroni to a guest?",a:"Bitter, boozy, spirit-forward, and orange-peel aromatic.",note:"Aperitivo classic."},
+  {section:"Specs",q:"What replaces gin in a Sbagliato?",a:"Prosecco replaces gin.",note:"That is the 'mistake.'"},
+  {section:"Build",q:"How do you make a Sbagliato?",a:"Build Campari and sweet vermouth over ice, then top with Prosecco.",note:"Gentle stir only."},
+  {section:"Glassware",q:"What glassware fits a Sbagliato?",a:"A wine glass over ice.",note:"Spritz-style presentation."},
+  {section:"Pitch",q:"How would you pitch a Sbagliato?",a:"Like a lighter, sparkling Negroni.",note:"Bitter but easier drinking."},
+  {section:"Specs",q:"What is the base liqueur in a Hugo Spritz?",a:"St-Germain elderflower liqueur.",note:"Floral profile."},
+  {section:"Specs",q:"What bubbly wine is used in a Hugo Spritz?",a:"Prosecco.",note:"Then a splash of soda."},
+  {section:"Garnish",q:"What are the classic garnishes for a Hugo Spritz?",a:"Mint and a lemon wheel.",note:"Fresh and aromatic."},
+  {section:"Pitch",q:"How do you describe a Hugo Spritz?",a:"Floral, bright, refreshing, and easy-drinking.",note:"Good for spritz guests wanting something softer than Aperol."},
+  {section:"Specs",q:"What gives an Aperol Sour its frothy texture?",a:"Egg white.",note:"Dry shake first."},
+  {section:"Method",q:"What is the correct method for an Aperol Sour?",a:"Dry shake, then shake with ice, then double strain.",note:"Classic sour technique."},
+  {section:"Style",q:"How do you pitch an Aperol Sour?",a:"Silky, citrusy, lightly bitter, and very approachable.",note:"Softer than a spirit-heavy sour."},
+  {section:"Mocktail",q:"How would you describe the Passionfruit Hibiscus Lemonade?",a:"Tart, floral, tropical, and refreshing.",note:"Best non-alcoholic cocktail-style pitch."},
+  {section:"Mocktail",q:"What are the core flavors in the Peach Iced Tea?",a:"Black tea, peach, and lemon.",note:"Refreshing and easy."},
+  {section:"Beer",q:"What non-alcoholic beer is on the menu?",a:"Peroni 0.0%.",note:"Italian and alcohol-free."},
+  {section:"Beer",q:"What two Rouge River draft beers are offered?",a:"IPA and Pilsner.",note:"Both from Markham."},
+  {section:"Wine Glass",q:"What sparkling wine is poured by the glass?",a:"Prosecco.",note:"Veneto."},
+  {section:"Wine Glass",q:"What rosato is poured by the glass?",a:"Rosé from Apulia.",note:"Listed under rosato."},
+  {section:"Wine Glass",q:"What two whites are poured by the glass?",a:"Pinot Grigio and Chardonnay.",note:"Lombardia and Toscana."},
+  {section:"Wine Glass",q:"What two reds are poured by the glass?",a:"Chianti and Sangiovese Blend.",note:"Toscana and Le Marche."},
+  {section:"Bottle",q:"What is the Verdicchio on the bottle list?",a:"Umani Ronchi 'Villa Bianchi' 2023 from Marche.",note:"$65 bottle."},
+  {section:"Bottle",q:"What Pecorino is on the list?",a:"Velenosi Villa Angela Pecorino 2024 from Marche.",note:"$70 bottle."},
+  {section:"Bottle",q:"What Greco di Tufo is on the list?",a:"Mastroberardino 2024 from Campania.",note:"$105 bottle."},
+  {section:"Bottle",q:"What Chablis is on the list?",a:"Madame Veuve Point 2024 from France.",note:"$140 bottle."},
+  {section:"Bottle",q:"What Chianti Classico is on the list?",a:"Badia a Coltibuono 2022 from Toscana.",note:"$98 bottle."},
+  {section:"Bottle",q:"What Nebbiolo is on the list?",a:"Produttori del Barbaresco 2024 from Piemonte.",note:"$115 bottle."},
+  {section:"Bottle",q:"What Montepulciano Riserva is on the list?",a:"Marina Cvetic 2020 from Abruzzo.",note:"$140 bottle."},
+  {section:"Half Bottle",q:"What three half bottles are shown?",a:"Gavi, Amarone, and Veuve Clicquot Champagne.",note:"375ml section."},
+  {section:"Spumante",q:"What Champagne rosé is listed under spumante?",a:"Moët & Chandon Rosé Impérial.",note:"750ml bottle."},
+  {section:"Spumante",q:"What two Prosecco bottles are listed under spumante?",a:"Castello di Roncade and Zardetto 'Refosso'.",note:"Both Veneto."},
+  {section:"Regions",q:"Which Italian region is Etna Bianco from?",a:"Sicilia.",note:"Volcanic white."},
+  {section:"Regions",q:"Which Italian region is Chianti from?",a:"Toscana.",note:"Classic Sangiovese territory."},
+  {section:"Regions",q:"Which region is Gavi from?",a:"Piemonte.",note:"Half-bottle section."},
+  {section:"Regions",q:"Which region is Amarone from?",a:"Veneto.",note:"Half-bottle section."},
+  {section:"Service",q:"If a guest wants a bitter classic aperitivo, which cocktail is the cleanest steer?",a:"Negroni.",note:"Most spirit-forward option."},
+  {section:"Service",q:"If a guest wants sparkling and bitter but lighter than a Negroni, what do you steer them to?",a:"Sbagliato.",note:"Sparkling aperitivo."},
+  {section:"Service",q:"If a guest wants floral and fresh, what cocktail is the best steer?",a:"Hugo Spritz.",note:"Elderflower, mint, lemon."},
+  {section:"Service",q:"If a guest wants a proper mocktail instead of soda, what is the strongest recommendation?",a:"Passionfruit Hibiscus Lemonade.",note:"Most cocktail-like NA option."}
 ];
 
 const WINES = [
@@ -705,6 +850,16 @@ const WINE_CARDS = [
   {"section":"Pairing","q":"What wine pairs with Pappardelle Funghi?","a":"Chardonnay or Nebbiolo","context":"Roca delle Macie $80 or Barbaresco $115"},
   {"section":"Pairing","q":"What wine pairs with Grilled Branzino?","a":"Etna Bianco or Verdicchio","context":"Planeta $110 or Umani Ronchi $65 — mineral whites"},
   {"section":"Pairing","q":"What wine pairs with Chicken Parmigiana?","a":"Chianti or Nero d'Avola","context":"Medium reds — not too heavy"}
+  ,{"type":"sparkling","color":"sparkling","category":"Sparkling","name":"Rosé","pronunciation":"roh-ZAY","flavors":["strawberry and watermelon","dry finish","fresh acidity"],"dials":{"Body":2,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Rosé by glass","region":"Apulia, Italy","year":"NV","price":"$17"}],"guest_line":"Dry, crisp rosé with bright red-fruit notes — easy and versatile by the glass.","note":"Listed on the current menu under Rosato by the glass"}
+  ,{"type":"grape","color":"white","category":"White Grapes","name":"Gavi","pronunciation":"GAH-vee","flavors":["citrus and pear","light floral note","clean mineral finish"],"dials":{"Body":2,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Gavi — Villa Sparina","region":"Piemonte, Italy","year":"2022","price":"$55 half bottle"}],"guest_line":"Crisp northern Italian white — light, mineral and very food-friendly.","note":"Classic Cortese-based white from Piemonte. Listed in the half-bottle section"}
+  ,{"type":"region","color":"white","category":"White Grapes","name":"Pietrabianca Chardonnay","pronunciation":"pee-eh-trah-BYAN-kah","flavors":["ripe orchard fruit","creamier texture","soft oak spice"],"dials":{"Body":4,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Chardonnay — Pietrabianca 'Bocca di Lupo'","region":"Apulia, Italy","year":"2024","price":"$130"}],"guest_line":"Richer southern Italian Chardonnay with more texture and weight.","note":"Useful for guests asking for the fullest-bodied Chardonnay on the list"}
+  ,{"type":"region","color":"red","category":"Red Grapes","name":"Bolgheri","pronunciation":"bol-GAIR-ee","flavors":["dark berries","herbs and cedar","polished tannin"],"dials":{"Body":4,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Bolgheri — Tenuta Argentiera 'Poggio ai Ginepri'","region":"Toscana, Italy","year":"2023","price":"$135"}],"guest_line":"Tuscan Bordeaux-style blend — polished, dark-fruited and structured.","note":"Bolgheri is coastal Tuscany and famous for Cabernet-led Super Tuscan wines"}
+  ,{"type":"region","color":"red","category":"Red Grapes","name":"Chianti Gran Selezione","pronunciation":"kee-AHN-tee grahn seh-leht-see-OH-neh","flavors":["red cherry and dried herbs","firm tannin","long savoury finish"],"dials":{"Body":4,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Chianti Gran Selezione — Il Palazzino","region":"Toscana, Italy","year":"2021","price":"$150"}],"guest_line":"A more serious, structured step up from Chianti Classico.","note":"Gran Selezione is the top Chianti Classico quality tier"}
+  ,{"type":"region","color":"red","category":"Red Grapes","name":"Brunello di Montalcino","pronunciation":"broo-NEL-loh dee mon-tal-CHEE-noh","flavors":["dried cherry and leather","earth and spice","long powerful finish"],"dials":{"Body":5,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Brunello — Gaja 'Pieve Santa Restituta'","region":"Toscana, Italy","year":"2020","price":"$295"}],"guest_line":"Powerful, age-worthy Tuscan red with depth, structure and classic savoury complexity.","note":"100% Sangiovese from Montalcino — one of Italy's benchmark reds"}
+  ,{"type":"region","color":"red","category":"Red Grapes","name":"Bordeaux Grand Cru","pronunciation":"bor-DOH grand crew","flavors":["blackcurrant and plum","cedar and graphite","firm structured finish"],"dials":{"Body":5,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Bordeaux Grand Cru — Château Corbin","region":"France","year":"2016","price":"$265"}],"guest_line":"A more serious, cellar-worthy Bordeaux with deeper structure and cedar complexity.","note":"Use for guests wanting classic Old World prestige reds"}
+  ,{"type":"region","color":"red","category":"Red Grapes","name":"Super Tuscan","pronunciation":"soo-per TUS-kan","flavors":["ripe dark fruit","oak spice","full polished finish"],"dials":{"Body":5,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Super Tuscan — Gaja Ca' Marcanda 'Promis'","region":"Toscana, Italy","year":"2022","price":"$185"},{"bottle":"Super Tuscan — Antinori 'Tignanello'","region":"Toscana, Italy","year":"2022","price":"$410"}],"guest_line":"Internationally styled Tuscan red — rich, polished and powerful.","note":"Super Tuscan usually means Cabernet/Merlot/Sangiovese blends outside stricter appellation rules"}
+  ,{"type":"region","color":"red","category":"Red Grapes","name":"Amarone","pronunciation":"ah-mah-ROH-neh","flavors":["raisined cherry","cocoa and spice","rich warming finish"],"dials":{"Body":5,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Amarone — Brigaldara","region":"Veneto, Italy","year":"2019","price":"$100 half bottle"}],"guest_line":"Rich, concentrated Venetian red with dried-fruit depth and serious body.","note":"Made from partially dried grapes — that appassimento method gives the signature richness"}
+  ,{"type":"sparkling","color":"sparkling","category":"Sparkling","name":"Champagne Rosé","pronunciation":"sham-PAYN roh-ZAY","flavors":["red berries","toast","fine mousse"],"dials":{"Body":3,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Champagne Rosé Impérial — Moët & Chandon","region":"France","year":"NV","price":"$225"}],"guest_line":"Celebratory rosé Champagne — bright red fruit with toast and crisp acidity.","note":"Added from the current spumante list"}
 ];
 
 const DIAL_LABELS = {
@@ -734,6 +889,33 @@ function showScreen(id) {
 }
 
 const states = {};
+
+function renderCocktail() {
+  const id = 'cocktail'; const s = states[id];
+  const list = filtered(id);
+  if (!list.length) return;
+  if (s.pos >= list.length) s.pos = 0;
+  const c = COCKTAILS[list[s.pos]];
+  document.getElementById('cocktail-prog').textContent = (s.pos+1) + ' / ' + list.length;
+  document.getElementById('cocktail-front').innerHTML = `
+    <div class="front-cat">${c.category}</div>
+    <div class="front-name">${c.name}</div>
+    <div class="front-price">$${c.price}</div>
+    <div class="tap-hint">Tap to reveal · <span style="opacity:0.6">Space flip · → next · ← prev</span></div>`;
+  const bullets = c.pitch.map((w,i)=>`<div class="pitch-item"><span class="pitch-num">0${i+1}</span><span class="pitch-word">${w}</span></div>`).join('');
+  const details = c.bottles.map(x => `<div class="info-text">${x}</div>`).join('');
+  document.getElementById('cocktail-back').innerHTML = `
+    <div class="section-tag">Quick Pitch</div>
+    <div class="back-name">${c.name}</div>
+    <div class="pitch-list">${bullets}</div>
+    <div class="back-divider"></div>
+    <div class="info-block"><div class="info-label">Classic spec</div><div class="info-text">${c.full}</div></div>
+    <div class="info-block"><div class="info-label">Service</div><div class="info-text">${c.mise}</div></div>
+    <div class="info-block"><div class="info-label">Describe it as</div><div class="info-text italic">${c.wine}</div></div>
+    <div class="info-block"><div class="info-label">Build notes</div>${details}</div>
+    <div class="note-line">※ ${c.note}</div>`;
+}
+
 
 function initDeck(id, items, sections) {
   states[id] = { items, order: items.map((_,i)=>i), pos:0, flipped:false, section:'All', sections };
