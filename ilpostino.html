@@ -1261,10 +1261,12 @@ function renderQuiz(id, data) {
 
 const srWeights = {};
 const srSkipNext = {};
+const srCooldown = {}; // card index → remaining cards before re-eligible
 
 function srInit(id, count) {
   srWeights[id] = new Array(count).fill(1);
   srSkipNext[id] = new Set();
+  srCooldown[id] = {};
 }
 
 function srMark(id, result) {
@@ -1273,14 +1275,18 @@ function srMark(id, result) {
   if (!list.length) return;
   const itemIdx = list[s.pos];
   if (result === 'wrong') {
-    srWeights[id][itemIdx] = 3;
+    srWeights[id][itemIdx] = 4;
     srSkipNext[id].delete(itemIdx);
+    delete srCooldown[id][itemIdx];
   } else if (result === 'unsure') {
     srWeights[id][itemIdx] = 2;
     srSkipNext[id].delete(itemIdx);
+    const total = filtered(id).length;
+    srCooldown[id][itemIdx] = Math.max(3, Math.min(Math.floor(total * 0.4), 8));
   } else {
     srSkipNext[id].add(itemIdx);
     srWeights[id][itemIdx] = 1;
+    delete srCooldown[id][itemIdx];
   }
   srUpdateProgress(id);
   srNext(id);
@@ -1292,6 +1298,7 @@ function srFiltered(id) {
     const item = s.items[i];
     if (s.section !== 'All' && (item.category || item.section) !== s.section) return false;
     if (srSkipNext[id] && srSkipNext[id].has(i)) return false;
+    if (srCooldown[id] && srCooldown[id][i] > 0) return false;
     return true;
   });
   const weighted = [];
@@ -1313,7 +1320,15 @@ function srNext(id) {
   cardInner.style.height = '';
   if (btn) btn.textContent = 'Flip';
   setTimeout(function() {
-    const pickedItemIdx = list[Math.floor(Math.random() * list.length)];
+    // Decrement cooldowns
+    if (srCooldown[id]) {
+      Object.keys(srCooldown[id]).forEach(k => {
+        srCooldown[id][k]--;
+        if (srCooldown[id][k] <= 0) delete srCooldown[id][k];
+      });
+    }
+    const freshList = srFiltered(id);
+    const pickedItemIdx = freshList[Math.floor(Math.random() * freshList.length)];
     const regularList = filtered(id);
     const posInRegular = regularList.indexOf(pickedItemIdx);
     s.pos = posInRegular >= 0 ? posInRegular : 0;
