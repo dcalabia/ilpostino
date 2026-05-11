@@ -255,7 +255,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
   background: rgba(237,229,216,0.97);
   backdrop-filter: blur(8px);
   border-top: 1px solid var(--line);
-  display: grid; grid-template-columns: repeat(7, 1fr);
+  display: grid; grid-template-columns: repeat(8, 1fr);
   padding: 8px 0 max(8px, env(safe-area-inset-bottom));
   z-index: 100;
 }
@@ -266,7 +266,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
   border: none; background: none;
 }
 .nav-item:active { background: rgba(0,0,0,0.04); }
-.nav-item .ni { font-size: 16px; }
+.nav-item .ni { font-size: 15px; }
 .nav-item .nl { font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
 .nav-item.active .nl { color: var(--acc); font-weight: 600; }
 </style>
@@ -314,6 +314,15 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
 
     <div class="section-label">Quick Quiz — One Question, One Answer</div>
     <div class="card-list">
+      <div class="h-card" onclick="showScreen('allq-screen')" style="border-left-color:#8a4a8a;">
+        <div class="h-icon">🃏</div>
+        <div class="h-body">
+          <div class="h-top"><div class="h-name">All Cards</div><div class="h-count" id="all-count">220+ cards</div></div>
+          <div class="h-desc">Every quiz card in one shuffled deck — food, wine, and drinks combined.</div>
+          <div class="h-tags"><span class="h-tag">Food</span><span class="h-tag">Wine</span><span class="h-tag">Drinks</span></div>
+        </div>
+        <div class="h-arrow">›</div>
+      </div>
       <div class="h-card food-q" onclick="showScreen('foodq-screen')">
         <div class="h-icon">🧠</div>
         <div class="h-body">
@@ -561,8 +570,44 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
   </div>
 </div>
 
+<!-- ALL QUIZ SCREEN -->
+<div id="allq-screen" class="screen deck-screen">
+  <div class="deck-wrap">
+    <button class="back-btn" onclick="showScreen('home')">← Back</button>
+    <div class="deck-eyebrow">Quick Quiz</div>
+    <div class="deck-title">All Cards</div>
+    <div class="deck-divider"></div>
+    <div class="cat-row" id="allq-cats"></div>
+    <div class="progress" id="allq-prog"></div>
+    <div class="sr-stats" id="allq-sr-stats"></div>
+    <div class="sr-progress-bar-wrap"><div class="sr-progress-bar" id="allq-sr-bar" style="width:0%"></div></div>
+    <div class="card-wrap" onclick="flip('allq')">
+      <div class="card-inner" id="allq-card">
+        <div class="card-face card-front" id="allq-front"></div>
+        <div class="card-face card-back" id="allq-back"></div>
+      </div>
+    </div>
+    <div class="deck-controls">
+      <div class="nav-row">
+        <button class="nav-btn" onclick="prev('allq')">←</button>
+        <button class="nav-btn primary" id="allq-flip" onclick="flip('allq')">Flip</button>
+        <button class="nav-btn" onclick="next('allq')">→</button>
+      </div>
+      <div class="extra-row">
+        <button class="extra-btn" onclick="shuffle('allq')">⇄ Shuffle</button>
+        <button class="extra-btn" onclick="reset('allq')">↺ Reset</button>
+      </div>
+      <div class="sr-row" id="allq-sr-row">
+        <button class="sr-btn sr-wrong" id="allq-sr-wrong" onclick="srMark('allq','wrong')">✗ Again</button>
+        <button class="sr-btn sr-unsure" id="allq-sr-unsure" onclick="srMark('allq','unsure')">~ Unsure</button>
+        <button class="sr-btn sr-right" id="allq-sr-right" onclick="srMark('allq','right')">✓ Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
-<nav class="bottom-nav" style="display:grid;grid-template-columns:repeat(7,1fr);">
+<nav class="bottom-nav" style="display:grid;grid-template-columns:repeat(8,1fr);">
   <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
     <span class="ni">🏠</span><span class="nl" style="font-size:8px;">Home</span>
   </button>
@@ -583,6 +628,9 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
   </button>
   <button class="nav-item" id="nav-wineq" onclick="showScreen('wineq-screen')">
     <span class="ni">⭐</span><span class="nl" style="font-size:8px;">Wine Q</span>
+  </button>
+  <button class="nav-item" id="nav-allq" onclick="showScreen('allq-screen')">
+    <span class="ni">🃏</span><span class="nl" style="font-size:8px;">All</span>
   </button>
 </nav>
 
@@ -668,6 +716,13 @@ const DRINK_QUIZ = [
   {section:"Service",q:"If a guest wants sparkling and bitter but lighter than a Negroni, what do you steer them to?",a:"Sbagliato.",note:"Sparkling aperitivo."},
   {section:"Service",q:"If a guest wants floral and fresh, what cocktail is the best steer?",a:"Hugo Spritz.",note:"Elderflower, mint, lemon."},
   {section:"Service",q:"If a guest wants a proper mocktail instead of soda, what is the strongest recommendation?",a:"Passionfruit Hibiscus Lemonade.",note:"Most cocktail-like NA option."}
+];
+
+// ALL CARDS — aggregated quiz deck
+const ALL_CARDS = [
+  ...FOOD_CARDS.map(c => ({...c, deck:'Food'})),
+  ...WINE_CARDS.map(c => ({...c, deck:'Wine'})),
+  ...DRINK_QUIZ.map(c => ({...c, deck:'Drinks'}))
 ];
 
 const WINES = [
@@ -875,11 +930,11 @@ const DIAL_LABELS = {
   Tannin: ["Very Soft","Soft","Medium","Firm","Very Firm"]
 };
 
-const SCREENS = ['home','menu-screen','wine-screen','cocktail-screen','foodq-screen','drinkq-screen','wineq-screen'];
+const SCREENS = ['home','menu-screen','wine-screen','cocktail-screen','foodq-screen','drinkq-screen','wineq-screen','allq-screen'];
 const NAV_MAP = {
   'home':'nav-home','menu-screen':'nav-menu',
   'wine-screen':'nav-wine','cocktail-screen':'nav-cocktail',
-  'foodq-screen':'nav-foodq','drinkq-screen':'nav-drinkq','wineq-screen':'nav-wineq'
+  'foodq-screen':'nav-foodq','drinkq-screen':'nav-drinkq','wineq-screen':'nav-wineq','allq-screen':'nav-allq'
 };
 
 function showScreen(id) {
@@ -933,7 +988,7 @@ function filtered(id) {
   return s.order.filter(i => {
     const item = s.items[i];
     if (s.section === 'All') return true;
-    return (item.category || item.section) === s.section;
+    return (item.category || item.section || item.deck) === s.section;
   });
 }
 
@@ -1045,6 +1100,7 @@ function render(id) {
   else if (id === 'foodq') renderQuiz('foodq', FOOD_CARDS);
   else if (id === 'drinkq') renderQuiz('drinkq', DRINK_QUIZ);
   else if (id === 'wineq') renderQuiz('wineq', WINE_CARDS);
+  else if (id === 'allq') renderQuiz('allq', ALL_CARDS);
   srInjectBadge(id);
 }
 
@@ -1296,7 +1352,7 @@ function srFiltered(id) {
   const s = states[id];
   const base = s.items.map((_,i) => i).filter(i => {
     const item = s.items[i];
-    if (s.section !== 'All' && (item.category || item.section) !== s.section) return false;
+    if (s.section !== 'All' && (item.category || item.section || item.deck) !== s.section) return false;
     if (srSkipNext[id] && srSkipNext[id].has(i)) return false;
     if (srCooldown[id] && srCooldown[id][i] > 0) return false;
     return true;
@@ -1385,6 +1441,7 @@ function srInjectBadge(id) {
   if (!front.querySelector('.sr-badge')) front.innerHTML += badge;
 }
 
+initDeck('allq', ALL_CARDS, ['Food','Wine','Drinks']);
 initDeck('menu', DISHES, ['Antipasti','Salad','Pizza','Pasta','Entrata']);
 initDeck('wine', WINES, ['White Grapes','Red Grapes','Sparkling & Rosé']);
 initDeck('foodq', FOOD_CARDS, ['Ingredients','Pitch','Pairing','Italian Words','Glossary','Pasta Shapes','Details']);
@@ -1393,6 +1450,7 @@ initDeck('cocktail', COCKTAILS, ['Cocktail','Mocktail','Beer','Beer / NA']);
 initDeck('drinkq', DRINK_QUIZ, ['Specs','Glassware','Garnish','Style','Build','Pitch','Method','Mocktail','Beer','Wine Glass','Bottle','Half Bottle','Spumante','Regions','Service']);
 srInit('menu', DISHES.length);
 srInit('wine', WINES.length);
+srInit('allq', ALL_CARDS.length);
 srInit('cocktail', COCKTAILS.length);
 srInit('foodq', FOOD_CARDS.length);
 srInit('drinkq', DRINK_QUIZ.length);
@@ -1401,9 +1459,9 @@ renderMenu(); renderWine();
 renderQuiz('foodq', FOOD_CARDS);
 renderQuiz('wineq', WINE_CARDS);
 buildCats('menu'); buildCats('wine');
-buildCats('cocktail'); buildCats('drinkq');
+buildCats('allq'); buildCats('cocktail'); buildCats('drinkq');
 buildCats('foodq'); buildCats('wineq');
-render('menu'); render('wine'); render('cocktail'); render('foodq'); render('drinkq'); render('wineq');
+render('menu'); render('wine'); render('cocktail'); render('allq'); render('foodq'); render('drinkq'); render('wineq');
 srUpdateProgress('menu'); srUpdateProgress('wine');
 srUpdateProgress('foodq'); srUpdateProgress('wineq');
 
@@ -1425,7 +1483,8 @@ document.addEventListener('keydown', function(e) {
     screen === 'cocktail-screen' ? 'cocktail' :
     screen === 'foodq-screen' ? 'foodq' :
     screen === 'drinkq-screen' ? 'drinkq' :
-    screen === 'wineq-screen' ? 'wineq' : null;
+    screen === 'wineq-screen' ? 'wineq' :
+    screen === 'allq-screen' ? 'allq' : null;
   if (!id) return;
   const flipped = states[id] && states[id].flipped;
   if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || key === ' ') e.preventDefault();
