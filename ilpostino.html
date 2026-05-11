@@ -1304,7 +1304,7 @@ function renderQuiz(id, data) {
     <div class="quiz-q">${c.q}</div>
     ${c.context ? `<div class="quiz-context">${c.context}</div>` : ''}
     <div class="tap-hint" style="margin-top:auto">Tap to reveal · <span style="opacity:0.6">Space flip · A wrong · S unsure · D correct</span></div>`;
-  const translations = getItalianTranslations((c.a + ' ' + (c.context||'')).toLowerCase());
+  const translations = getItalianTranslations((c.q + ' ' + c.a + ' ' + (c.context||'') + ' ' + (c.note||'')).toLowerCase());
   const translationBlock = translations.length
     ? `<div class="back-divider"></div><div class="info-label" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Italian</div><div style="font-size:12px;color:var(--ink-soft);line-height:1.8">${translations.join('<br>')}</div>`
     : '';
