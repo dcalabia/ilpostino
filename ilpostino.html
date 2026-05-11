@@ -952,12 +952,17 @@ function flip(id) {
       cardInner.style.height = back.scrollHeight + 'px';
       setTimeout(function() {
         const srRow = document.getElementById(id+'-sr-row');
-        if (srRow) {
-          const rect = srRow.getBoundingClientRect();
-          const scrollTarget = window.scrollY + rect.bottom - window.innerHeight + 80;
-          window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+        const target = srRow || document.getElementById(id+'-flip');
+        if (target) {
+          const rect = target.getBoundingClientRect();
+          const navH = 80;
+          const padding = 16;
+          if (rect.bottom > window.innerHeight - navH - padding) {
+            const scrollTarget = window.scrollY + rect.bottom - window.innerHeight + navH + padding;
+            window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+          }
         }
-      }, 60);
+      }, 120);
     } else {
       cardInner.style.height = front.scrollHeight + 'px';
       cardInner.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1381,7 +1386,9 @@ renderMenu(); renderWine();
 renderQuiz('foodq', FOOD_CARDS);
 renderQuiz('wineq', WINE_CARDS);
 buildCats('menu'); buildCats('wine');
+buildCats('cocktail'); buildCats('drinkq');
 buildCats('foodq'); buildCats('wineq');
+render('menu'); render('wine'); render('cocktail'); render('foodq'); render('drinkq'); render('wineq');
 srUpdateProgress('menu'); srUpdateProgress('wine');
 srUpdateProgress('foodq'); srUpdateProgress('wineq');
 
