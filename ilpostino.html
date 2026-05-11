@@ -562,21 +562,27 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-h
 </div>
 
 <!-- BOTTOM NAV -->
-<nav class="bottom-nav">
+<nav class="bottom-nav" style="display:grid;grid-template-columns:repeat(6,1fr);">
   <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
-    <span class="ni">🏠</span><span class="nl">Home</span>
+    <span class="ni">🏠</span><span class="nl" style="font-size:8px;">Home</span>
   </button>
   <button class="nav-item" id="nav-menu" onclick="showScreen('menu-screen')">
-    <span class="ni">🍽</span><span class="nl">Menu</span>
+    <span class="ni">🍽</span><span class="nl" style="font-size:8px;">Menu</span>
   </button>
   <button class="nav-item" id="nav-wine" onclick="showScreen('wine-screen')">
-    <span class="ni">🍷</span><span class="nl">Wine</span>
+    <span class="ni">🍷</span><span class="nl" style="font-size:8px;">Wine</span>
+  </button>
+  <button class="nav-item" id="nav-cocktail" onclick="showScreen('cocktail-screen')">
+    <span class="ni">🍸</span><span class="nl" style="font-size:8px;">Drinks</span>
   </button>
   <button class="nav-item" id="nav-foodq" onclick="showScreen('foodq-screen')">
-    <span class="ni">🧠</span><span class="nl">Food Q</span>
+    <span class="ni">🧠</span><span class="nl" style="font-size:8px;">Food Q</span>
+  </button>
+  <button class="nav-item" id="nav-drinkq" onclick="showScreen('drinkq-screen')">
+    <span class="ni">🥃</span><span class="nl" style="font-size:8px;">Dr Q</span>
   </button>
   <button class="nav-item" id="nav-wineq" onclick="showScreen('wineq-screen')">
-    <span class="ni">⭐</span><span class="nl">Wine Q</span>
+    <span class="ni">⭐</span><span class="nl" style="font-size:8px;">Wine Q</span>
   </button>
 </nav>
 
@@ -869,10 +875,11 @@ const DIAL_LABELS = {
   Tannin: ["Very Soft","Soft","Medium","Firm","Very Firm"]
 };
 
-const SCREENS = ['home','menu-screen','wine-screen','foodq-screen','wineq-screen'];
+const SCREENS = ['home','menu-screen','wine-screen','cocktail-screen','foodq-screen','drinkq-screen','wineq-screen'];
 const NAV_MAP = {
   'home':'nav-home','menu-screen':'nav-menu',
-  'wine-screen':'nav-wine','foodq-screen':'nav-foodq','wineq-screen':'nav-wineq'
+  'wine-screen':'nav-wine','cocktail-screen':'nav-cocktail',
+  'foodq-screen':'nav-foodq','drinkq-screen':'nav-drinkq','wineq-screen':'nav-wineq'
 };
 
 function showScreen(id) {
@@ -1029,7 +1036,9 @@ function buildCats(id) {
 function render(id) {
   if (id === 'menu') renderMenu();
   else if (id === 'wine') renderWine();
+  else if (id === 'cocktail') renderCocktail();
   else if (id === 'foodq') renderQuiz('foodq', FOOD_CARDS);
+  else if (id === 'drinkq') renderQuiz('drinkq', DRINK_QUIZ);
   else if (id === 'wineq') renderQuiz('wineq', WINE_CARDS);
   srInjectBadge(id);
 }
@@ -1360,9 +1369,13 @@ initDeck('menu', DISHES, ['Antipasti','Salad','Pizza','Pasta','Entrata']);
 initDeck('wine', WINES, ['White Grapes','Red Grapes','Sparkling & Rosé']);
 initDeck('foodq', FOOD_CARDS, ['Ingredients','Pitch','Pairing','Italian Words','Glossary','Pasta Shapes','Details']);
 initDeck('wineq', WINE_CARDS, ['Vintage','Grape','Region','Style','Pairing']);
+initDeck('cocktail', COCKTAILS, ['Cocktail','Mocktail','Beer','Beer / NA']);
+initDeck('drinkq', DRINK_QUIZ, ['Specs','Glassware','Garnish','Style','Build','Pitch','Method','Mocktail','Beer','Wine Glass','Bottle','Half Bottle','Spumante','Regions','Service']);
 srInit('menu', DISHES.length);
 srInit('wine', WINES.length);
+srInit('cocktail', COCKTAILS.length);
 srInit('foodq', FOOD_CARDS.length);
+srInit('drinkq', DRINK_QUIZ.length);
 srInit('wineq', WINE_CARDS.length);
 renderMenu(); renderWine();
 renderQuiz('foodq', FOOD_CARDS);
@@ -1387,7 +1400,9 @@ document.addEventListener('keydown', function(e) {
   const id = screen === 'home' ? null :
     screen === 'menu-screen' ? 'menu' :
     screen === 'wine-screen' ? 'wine' :
+    screen === 'cocktail-screen' ? 'cocktail' :
     screen === 'foodq-screen' ? 'foodq' :
+    screen === 'drinkq-screen' ? 'drinkq' :
     screen === 'wineq-screen' ? 'wineq' : null;
   if (!id) return;
   const flipped = states[id] && states[id].flipped;
