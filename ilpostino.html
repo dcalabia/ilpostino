@@ -718,13 +718,6 @@ const DRINK_QUIZ = [
   {section:"Service",q:"If a guest wants a proper mocktail instead of soda, what is the strongest recommendation?",a:"Passionfruit Hibiscus Lemonade.",note:"Most cocktail-like NA option."}
 ];
 
-// ALL CARDS — aggregated quiz deck
-const ALL_CARDS = [
-  ...FOOD_CARDS.map(c => ({...c, deck:'Food'})),
-  ...WINE_CARDS.map(c => ({...c, deck:'Wine'})),
-  ...DRINK_QUIZ.map(c => ({...c, deck:'Drinks'}))
-];
-
 const WINES = [
   {"type":"grape","color":"white","category":"White Grapes","name":"Verdicchio","pronunciation":"ver-DIK-kyo","flavors":["citrus and green apple","almond and fennel","crisp mineral finish"],"dials":{"Body":2,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Verdicchio — Umani Ronchi 'Villa Bianchi'","region":"Marche, Italy","year":"2023","price":"$65"}],"guest_line":"Central Italian white — bright citrus with a pleasantly bitter almond finish. Very food-friendly.","note":"Verdicchio means 'little green one' — referring to its greenish hue. Classic match for seafood.","subcat":"Verdicchio"},
   {"type":"grape","color":"white","category":"White Grapes","name":"Pecorino","pronunciation":"pek-oh-REE-noh","flavors":["white peach","herbal notes","fresh and dry"],"dials":{"Body":3,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Pecorino — Velenosi 'Villa Angela Falerio'","region":"Marche, Italy","year":"2024","price":"$70"}],"guest_line":"Don't confuse with the cheese — this is a crisp, aromatic white from central Italy with lovely peach notes.","note":"Same name as the sheep's milk cheese but entirely different — an ancient grape rediscovered in Abruzzo.","subcat":"Pecorino"},
@@ -921,6 +914,13 @@ const WINE_CARDS = [
   ,{"type":"region","color":"red","category":"Red Grapes","name":"Super Tuscan","pronunciation":"soo-per TUS-kan","flavors":["ripe dark fruit","oak spice","full polished finish"],"dials":{"Body":5,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Super Tuscan — Gaja Ca' Marcanda 'Promis'","region":"Toscana, Italy","year":"2022","price":"$185"},{"bottle":"Super Tuscan — Antinori 'Tignanello'","region":"Toscana, Italy","year":"2022","price":"$410"}],"guest_line":"Internationally styled Tuscan red — rich, polished and powerful.","note":"Super Tuscan usually means Cabernet/Merlot/Sangiovese blends outside stricter appellation rules"}
   ,{"type":"region","color":"red","category":"Red Grapes","name":"Amarone","pronunciation":"ah-mah-ROH-neh","flavors":["raisined cherry","cocoa and spice","rich warming finish"],"dials":{"Body":5,"Acidity":3,"Sweetness":1},"on_list":[{"bottle":"Amarone — Brigaldara","region":"Veneto, Italy","year":"2019","price":"$100 half bottle"}],"guest_line":"Rich, concentrated Venetian red with dried-fruit depth and serious body.","note":"Made from partially dried grapes — that appassimento method gives the signature richness"}
   ,{"type":"sparkling","color":"sparkling","category":"Sparkling","name":"Champagne Rosé","pronunciation":"sham-PAYN roh-ZAY","flavors":["red berries","toast","fine mousse"],"dials":{"Body":3,"Acidity":4,"Sweetness":1},"on_list":[{"bottle":"Champagne Rosé Impérial — Moët & Chandon","region":"France","year":"NV","price":"$225"}],"guest_line":"Celebratory rosé Champagne — bright red fruit with toast and crisp acidity.","note":"Added from the current spumante list"}
+];
+
+// ALL CARDS — aggregated quiz deck (declared after all dependencies)
+const ALL_CARDS = [
+  ...FOOD_CARDS.map(c => ({...c, deck:'Food'})),
+  ...WINE_CARDS.map(c => ({...c, deck:'Wine'})),
+  ...DRINK_QUIZ.map(c => ({...c, deck:'Drinks'}))
 ];
 
 const DIAL_LABELS = {
